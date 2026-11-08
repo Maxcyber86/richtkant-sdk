@@ -1,0 +1,35 @@
+{
+  "name": "richtkant-sdk",
+  "version": "0.16.7",
+  "private": true,
+  "description": "Richtkant Modul-SDK: Typdeklarationen, Dokumentation, OpenAPI-Beschreibung und Beispielmodul",
+  "license": "Apache-2.0",
+  "author": "Christian Heitzer (https://www.heitzer.info)",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "workspaces": [
+    "packages/modul-sdk",
+    "beispiel-modul/core",
+    "beispiel-modul/server",
+    "beispiel-modul/web"
+  ],
+  "scripts": {
+    "typecheck": "tsc -p beispiel-modul/core && tsc -p beispiel-modul/server && tsc -p beispiel-modul/web",
+    "test": "vitest run --root beispiel-modul/core"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "vitest": "^5.0.4",
+    "@types/node": "^22.15.0",
+    "@types/react": "^19.3.0",
+    "zod": "^4.6.7",
+    "drizzle-orm": "^0.45.4",
+    "fastify": "^5.12.7",
+    "fastify-type-provider-zod": "^7.0.0",
+    "react": "^19.3.1",
+    "@tanstack/react-query": "^5.104.3",
+    "lucide-react": "^1.57.0"
+  }
+}

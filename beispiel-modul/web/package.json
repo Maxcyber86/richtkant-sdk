@@ -1,0 +1,24 @@
+{
+  "name": "@rk-modul/beispiel-web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Richtkant-Beispielmodul Prüfpunkte: Oberfläche (Seite, Symbole, Hilfe)",
+  "license": "Apache-2.0",
+  "main": "./src/index.tsx",
+  "types": "./src/index.tsx",
+  "exports": {
+    ".": "./src/index.tsx"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@rk-modul/beispiel-core": "1.0.0"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.104.3",
+    "lucide-react": "^1.57.0",
+    "react": "^19.3.1"
+  }
+}

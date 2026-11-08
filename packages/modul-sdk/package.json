@@ -1,0 +1,70 @@
+{
+  "name": "@richtkant/modul-sdk",
+  "version": "0.16.7",
+  "description": "Typdeklarationen der Modul-Schnittstelle von Richtkant ERP 0.16.7 (Modulvertrag 2.2.0)",
+  "license": "Apache-2.0",
+  "author": "Christian Heitzer (https://www.heitzer.info)",
+  "type": "module",
+  "types": "./types/core.d.ts",
+  "exports": {
+    "./core": {
+      "types": "./types/core.d.ts"
+    },
+    "./core/hilfe": {
+      "types": "./types/core-hilfe.d.ts"
+    },
+    "./server": {
+      "types": "./types/server.d.ts"
+    },
+    "./server/db": {
+      "types": "./types/server-db.d.ts"
+    },
+    "./web": {
+      "types": "./types/web.d.ts"
+    }
+  },
+  "files": [
+    "types",
+    "README.md"
+  ],
+  "richtkant": {
+    "core": "0.16.7",
+    "vertrag": "2.2.0"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.104.3",
+    "drizzle-orm": "^0.45.4",
+    "fastify": "^5.12.7",
+    "fastify-type-provider-zod": "^7.0.0",
+    "react": "^19.3.1",
+    "@types/react": "^19.3.0",
+    "zod": "^4.6.7",
+    "@types/node": "^22.15.0"
+  },
+  "peerDependenciesMeta": {
+    "@tanstack/react-query": {
+      "optional": true
+    },
+    "drizzle-orm": {
+      "optional": true
+    },
+    "fastify": {
+      "optional": true
+    },
+    "fastify-type-provider-zod": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "@types/react": {
+      "optional": true
+    },
+    "zod": {
+      "optional": true
+    },
+    "@types/node": {
+      "optional": true
+    }
+  }
+}

@@ -1,0 +1,10 @@
+Richtkant Modul-SDK
+Copyright 2026 Christian Heitzer (www.heitzer.info)
+
+Dieses Repository enthält Typdeklarationen der Modul-Schnittstelle, Dokumentation, die OpenAPI-Beschreibung der
+öffentlichen API und ein Beispielmodul für Richtkant ERP. Lizenz: Apache License 2.0 (Datei LICENSE).
+
+Richtkant selbst (Core und die Branchenmodule des Herstellers) ist proprietär, nicht Teil dieses Repositorys und steht
+nicht unter dieser Lizenz.
+„Richtkant“ ist ein Produktname von Christian Heitzer; die Lizenz gewährt keine Rechte an Namen und Marken
+(Apache License 2.0, Abschnitt 6).

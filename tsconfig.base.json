@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": [
+      "ES2023"
+    ],
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "exactOptionalPropertyTypes": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "paths": {
+      "@gm/core": [
+        "./packages/modul-sdk/types/core.d.ts"
+      ],
+      "@gm/core/hilfe": [
+        "./packages/modul-sdk/types/core-hilfe.d.ts"
+      ],
+      "@gm/server/sdk": [
+        "./packages/modul-sdk/types/server.d.ts"
+      ],
+      "@gm/server/sdk/db": [
+        "./packages/modul-sdk/types/server-db.d.ts"
+      ],
+      "@gm/web/sdk": [
+        "./packages/modul-sdk/types/web.d.ts"
+      ]
+    }
+  }
+}

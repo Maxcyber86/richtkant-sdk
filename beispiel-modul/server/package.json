@@ -1,0 +1,25 @@
+{
+  "name": "@rk-modul/beispiel-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Richtkant-Beispielmodul Prüfpunkte: Server-Teil (Routen, Tabelle, Demodaten)",
+  "license": "Apache-2.0",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@rk-modul/beispiel-core": "1.0.0"
+  },
+  "peerDependencies": {
+    "drizzle-orm": "^0.45.4",
+    "fastify": "^5.12.7",
+    "fastify-type-provider-zod": "^7.0.0",
+    "zod": "^4.6.7"
+  }
+}
