@@ -18,13 +18,14 @@ export declare const IconButton: import("react").ForwardRefExoticComponent<Butto
     label: string;
     tooltip?: string;
 } & import("react").RefAttributes<HTMLButtonElement>>;
-export declare function Field({ label, hint, error, children, className, htmlFor }: {
+export declare function Field({ label, hint, error, children, className, htmlFor, hinweisId: hinweisIdVorgabe }: {
     label: string;
     hint?: ReactNode;
     error?: string | null;
     children: ReactNode;
     className?: string;
     htmlFor?: string;
+    hinweisId?: string;
 }): import("react").JSX.Element;
 export declare const TextInput: import("react").ForwardRefExoticComponent<InputHTMLAttributes<HTMLInputElement> & {
     label?: string;

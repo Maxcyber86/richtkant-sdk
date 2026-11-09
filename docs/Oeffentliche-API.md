@@ -1,10 +1,10 @@
 # Öffentliche API (Instanz-API /api/v1)
 
-Richtkant ERP 0.16.7 · Modulvertrag 2.2.0 · Stand 2026-11-08
+Richtkant ERP 0.16.8 · Modulvertrag 2.2.0 · Stand 2026-11-09
 Verantwortlich: Christian Heitzer, www.heitzer.info
 
 Die maschinenlesbare Beschreibung aller über einen API-Zugang erreichbaren Endpunkte liegt in
-[openapi/openapi.json](../openapi/openapi.json) (OpenAPI 3, erzeugt aus Richtkant Core 0.16.7 ohne Module; Endpunkte, die über
+[openapi/openapi.json](../openapi/openapi.json) (OpenAPI 3, erzeugt aus Richtkant Core 0.16.8 ohne Module; Endpunkte, die über
 die API immer gesperrt sind, sind dort nicht enthalten). Jede Instanz liefert ihre eigene, vollständige Beschreibung unter
 `GET /api/v1/openapi.json`, einschließlich der Endpunkte ihrer installierten Module.
 
@@ -27,26 +27,39 @@ an, die auch die Oberfläche nutzt: `https://<instanz>/api/v1/…`. Neben dem KI
   Instanz sieht (hinter dem Reverse Proxy die weitergereichte Adresse).
 - **Grenze je Minute** (1–1200, Standard 120) je Zugang; darüber `429` mit `Retry-After`. Abgewiesene Aufrufe (ungültiger,
   gesperrter oder abgelaufener Schlüssel, Adresse, Nur-Lesen, gesperrter Bereich) zählen je IP-Adresse; ab 30 je Minute antwortet die
-  Instanz sofort mit `429` (`ZU_VIELE_FEHLVERSUCHE`).
+  Instanz sofort mit `429` (`ZU_VIELE_FEHLVERSUCHE`). Eine fehlende Lizenz (`API_NICHT_LIZENZIERT`) zählt nicht als
+  Fehlversuch: Ein gültiger Schlüssel erhält dann immer `403`, nie `429`.
 - Dienstkonten sind keine Personen und zählen nicht als belegte Plätze der Lizenz.
+
+## 1a. Lizenz (ab 0.16.8)
+
+Die öffentliche API ist ein Paket im Vertrag: Höchstzahl aktiver Zugänge, ob Schreiben erlaubt ist, und
+die Obergrenze der Anfragen je Minute und Zugang. Ohne Paket bzw. bei abgelaufener Lizenz antworten alle Zugänge mit `403`
+`API_NICHT_LIZENZIERT` (in der Kulanzzeit wirken sie weiter). Erlaubt das Paket kein Schreiben, wirken auch Zugänge mit Umfang
+„schreiben“ nur lesend. Instanzen ohne Lizenzprüfung (Selbstbetrieb, Entwicklung) nutzen die API ohne diese Grenzen.
+Enthält die Lizenz das Paket ohne Angaben zum Umfang, gelten die Standardwerte (3 Zugänge, Schreiben erlaubt, 120 Anfragen je
+Minute). Als aktiv zählt ein Zugang, der nicht gesperrt, nicht gelöscht und nicht abgelaufen ist; die Grenze gilt beim Anlegen,
+Entsperren und Verlängern eines abgelaufenen Zugangs, auch bei gleichzeitigen Anfragen. Einschränken ist auch ohne Lizenz
+möglich: Sperren, Löschen, Umfang „lesen“ und eine kleinere Grenze je Minute.
 
 ## 2. Immer gesperrt über die API
 
 Unabhängig von den Rollen (Antwort `403`, Code `API_GESPERRT`): Anmeldung und Sitzungen (`/auth/*`), die API-Zugänge selbst
 (`/api-zugaenge*`), Kundenportal (`/portal*`, `/portal-verwaltung*`) sowie alle Bereiche der zentralen Sperrliste des KI-Zugriffs
 (`KI_SPERRLISTE` in `@gm/core`): Sicherheit und zweiter Faktor, Benutzer und Rollen (ändern), Anbindung an die Verwaltung des Herstellers,
-Lizenz und Fernzugriff, Wartung, Datensicherung und Wiederherstellung, Module, KI-Einstellungen und KI-Funktionen, Datenschutz
+Lizenz und Fernzugriff, Wartung, Datensicherung und Wiederherstellung, Module, KI-Einstellungen und KI-Funktionen (auch die
+KI-Zuordnung von Ausschreibungen `/gaeb/vorgaenge/:id/ki-*`), Datenschutz
 (Löschläufe, Anonymisierung), Demodaten, Zugangsdaten von Schnittstellen, Portalzugänge. Ein Fremdsystem verwaltet die Instanz nicht.
 
-Schritte, die eine Person persönlich bestätigen muss (Kennwort, zweiter Faktor, frische Microsoft-Anmeldung), sind über einen
-API-Zugang nie möglich.
+Schritte, die eine Person persönlich bestätigen muss (Kennwort, zweiter Faktor, frische Microsoft-Anmeldung, Zustimmung zur
+Übertragung an eine KI), sind über einen API-Zugang nie möglich.
 
 ## 3. Antworten und Fehler
 
 - JSON, Beträge in Cent, Datumswerte ISO 8601 (Zeitpunkte UTC mit `Z`, Kalendertage `YYYY-MM-DD`).
 - Fehler: HTTP-Status mit `{ "code": "<CODE>", "message": "<Text>" }` (Prüffehler der Eingaben: Code `VALIDIERUNG` mit `details`). Codes des Zugangs: `API_SCHLUESSEL_UNGUELTIG` (401),
   `API_ZUGANG_GESPERRT` (401), `API_ZUGANG_ABGELAUFEN` (401), `API_IP_NICHT_ERLAUBT` (403), `API_NUR_LESEN` (403),
-  `API_GESPERRT` (403), `429` bei Überschreiten der Grenze.
+  `API_GESPERRT` (403), `API_NICHT_LIZENZIERT` (403), `429` bei Überschreiten der Grenze.
 - Schreibende Aufrufe mit Versionsfeld (z. B. Belege) verlangen die aktuelle `version`; sonst `409`.
 
 ## 4. Beschreibung der Endpunkte

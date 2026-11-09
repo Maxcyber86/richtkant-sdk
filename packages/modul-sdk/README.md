@@ -1,6 +1,6 @@
 # @richtkant/modul-sdk
 
-Typdeklarationen der Modul-Schnittstelle von Richtkant ERP 0.16.7 (Modulvertrag 2.2.0). Nur `.d.ts`-Dateien, kein
+Typdeklarationen der Modul-Schnittstelle von Richtkant ERP 0.16.8 (Modulvertrag 2.2.0). Nur `.d.ts`-Dateien, kein
 ausführbarer Code; erzeugt aus dem Quelltext des Core mit `tsc --emitDeclarationOnly` und beschränkt auf die öffentliche
 Erweiterungsschnittstelle (ausdrücklich freigegebene Namen und die Typen, auf die sie verweisen). Interne Typen des Core und
 Bausteine, die nur die Module des Herstellers nutzen, sind nicht enthalten.

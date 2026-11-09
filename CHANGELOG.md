@@ -5,6 +5,7 @@ API-Nutzer. Änderungen für Anwenderinnen und Anwender stehen im Versionsverlau
 
 | Richtkant Core | Modulvertrag | API | Änderungen |
 |---|---|---|---|
+| 0.16.8 | 2.2.0 | /api/v1 | Öffentliche API: Nutzung als Lizenzpaket „api“ (Grenzen für aktive Zugänge, schreibenden Umfang und Anfragen je Minute); ohne Paket antworten Zugänge mit 403 API_NICHT_LIZENZIERT. Öffentliche API: GAEB-Endpunkte (/gaeb/…) für Ausschreibungen (X81/X83, GAEB 2000), Angebotsabgabe X84 und Auftragserteilung X86; KI-Vorschläge zum GAEB-Vorgang sind über die API gesperrt (neu in Richtkant Core 0.16.8). |
 | 0.16.7 | 2.2.0 | /api/v1 | Erste Veröffentlichung des Modul-SDK: Typdeklarationen der Importflächen, Dokumentation des Modulvertrags, Referenz der Erweiterungspunkte und Beispielmodul. Öffentliche API /api/v1 mit API-Zugängen (Schlüssel rkapi_…, Dienstkonto mit Rollen, Umfang lesen oder schreiben, IP-Einschränkung, Grenze je Minute) und OpenAPI-Beschreibung (neu in Richtkant Core 0.16.7). |
 
 ## Verlauf des Modulvertrags

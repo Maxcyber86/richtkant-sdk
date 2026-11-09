@@ -1,6 +1,6 @@
 # Modul-SDK und Modulvertrag 2.2.0
 
-Richtkant ERP 0.16.7 · Modulvertrag 2.2.0 · Stand 2026-11-08
+Richtkant ERP 0.16.8 · Modulvertrag 2.2.0 · Stand 2026-11-09
 Verantwortlich: Christian Heitzer, www.heitzer.info
 
 Versionierter Vertrag zwischen Richtkant Core und Modulen: Versionierung, Abwärtskompatibilität und Deprecation, die vollständige

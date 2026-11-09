@@ -39,14 +39,14 @@ export interface NewDmsDocument {
 export declare function createDmsDocument(db: DB, store: FileStore, input: NewDmsDocument): Promise<{
     kundeId: string | null;
     notiz: string | null;
-    titel: string;
     id: string;
-    lieferantId: string | null;
+    artikelId: string | null;
+    titel: string;
     typ: string;
+    lieferantId: string | null;
     nummer: string;
     projektId: string | null;
     belegId: string | null;
-    artikelId: string | null;
     reklamationId: string | null;
     betriebsmittelId: string | null;
     dokumentDatum: string;

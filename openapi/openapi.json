@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Richtkant ERP API",
-    "version": "0.16.7",
+    "version": "0.16.8",
     "description": "Öffentliche API: Anmeldung mit `Authorization: Bearer rkapi_…` (API-Zugang unter Administration › Schnittstellen › API-Zugänge). Beträge in Cent."
   },
   "components": {
@@ -15713,7 +15713,7 @@
                         "beschreibung": {
                           "nullable": true,
                           "type": "string",
-                          "maxLength": 4000
+                          "maxLength": 20000
                         },
                         "menge": {
                           "type": "number",
@@ -15787,6 +15787,79 @@
                           "type": "string",
                           "format": "uuid",
                           "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "oz": {
+                          "nullable": true,
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 40
+                        },
+                        "gaeb": {
+                          "nullable": true,
+                          "type": "object",
+                          "properties": {
+                            "art": {
+                              "type": "string",
+                              "enum": [
+                                "normal",
+                                "grund",
+                                "wahl",
+                                "bedarf_mit_gb",
+                                "bedarf_ohne_gb",
+                                "hinweis",
+                                "ausfuehrung",
+                                "bereich",
+                                "los"
+                              ]
+                            },
+                            "id": {
+                              "nullable": true,
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 80
+                            },
+                            "ebene": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9
+                            },
+                            "zulage": {
+                              "type": "boolean"
+                            },
+                            "pauschal": {
+                              "type": "boolean"
+                            },
+                            "stundenlohn": {
+                              "type": "boolean"
+                            },
+                            "altGruppe": {
+                              "type": "string",
+                              "maxLength": 10
+                            },
+                            "altNr": {
+                              "type": "string",
+                              "maxLength": 10
+                            },
+                            "einheit": {
+                              "type": "string",
+                              "maxLength": 20
+                            },
+                            "menge": {
+                              "type": "number",
+                              "minimum": -1000000000,
+                              "maximum": 1000000000
+                            },
+                            "gekuerzt": {
+                              "type": "boolean"
+                            },
+                            "inSumme": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "art"
+                          ],
+                          "additionalProperties": false
                         }
                       },
                       "required": [
@@ -16622,7 +16695,7 @@
                         "beschreibung": {
                           "nullable": true,
                           "type": "string",
-                          "maxLength": 4000
+                          "maxLength": 20000
                         },
                         "menge": {
                           "type": "number",
@@ -16696,6 +16769,79 @@
                           "type": "string",
                           "format": "uuid",
                           "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "oz": {
+                          "nullable": true,
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 40
+                        },
+                        "gaeb": {
+                          "nullable": true,
+                          "type": "object",
+                          "properties": {
+                            "art": {
+                              "type": "string",
+                              "enum": [
+                                "normal",
+                                "grund",
+                                "wahl",
+                                "bedarf_mit_gb",
+                                "bedarf_ohne_gb",
+                                "hinweis",
+                                "ausfuehrung",
+                                "bereich",
+                                "los"
+                              ]
+                            },
+                            "id": {
+                              "nullable": true,
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 80
+                            },
+                            "ebene": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9
+                            },
+                            "zulage": {
+                              "type": "boolean"
+                            },
+                            "pauschal": {
+                              "type": "boolean"
+                            },
+                            "stundenlohn": {
+                              "type": "boolean"
+                            },
+                            "altGruppe": {
+                              "type": "string",
+                              "maxLength": 10
+                            },
+                            "altNr": {
+                              "type": "string",
+                              "maxLength": 10
+                            },
+                            "einheit": {
+                              "type": "string",
+                              "maxLength": 20
+                            },
+                            "menge": {
+                              "type": "number",
+                              "minimum": -1000000000,
+                              "maximum": 1000000000
+                            },
+                            "gekuerzt": {
+                              "type": "boolean"
+                            },
+                            "inSumme": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "art"
+                          ],
+                          "additionalProperties": false
                         }
                       },
                       "required": [
@@ -22344,7 +22490,7 @@
                             "beschreibung": {
                               "nullable": true,
                               "type": "string",
-                              "maxLength": 4000
+                              "maxLength": 20000
                             },
                             "menge": {
                               "type": "number",
@@ -22418,6 +22564,79 @@
                               "type": "string",
                               "format": "uuid",
                               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                            },
+                            "oz": {
+                              "nullable": true,
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 40
+                            },
+                            "gaeb": {
+                              "nullable": true,
+                              "type": "object",
+                              "properties": {
+                                "art": {
+                                  "type": "string",
+                                  "enum": [
+                                    "normal",
+                                    "grund",
+                                    "wahl",
+                                    "bedarf_mit_gb",
+                                    "bedarf_ohne_gb",
+                                    "hinweis",
+                                    "ausfuehrung",
+                                    "bereich",
+                                    "los"
+                                  ]
+                                },
+                                "id": {
+                                  "nullable": true,
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 80
+                                },
+                                "ebene": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 9
+                                },
+                                "zulage": {
+                                  "type": "boolean"
+                                },
+                                "pauschal": {
+                                  "type": "boolean"
+                                },
+                                "stundenlohn": {
+                                  "type": "boolean"
+                                },
+                                "altGruppe": {
+                                  "type": "string",
+                                  "maxLength": 10
+                                },
+                                "altNr": {
+                                  "type": "string",
+                                  "maxLength": 10
+                                },
+                                "einheit": {
+                                  "type": "string",
+                                  "maxLength": 20
+                                },
+                                "menge": {
+                                  "type": "number",
+                                  "minimum": -1000000000,
+                                  "maximum": 1000000000
+                                },
+                                "gekuerzt": {
+                                  "type": "boolean"
+                                },
+                                "inSumme": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "art"
+                              ],
+                              "additionalProperties": false
                             }
                           },
                           "required": [
@@ -22541,7 +22760,7 @@
                         "beschreibung": {
                           "nullable": true,
                           "type": "string",
-                          "maxLength": 4000
+                          "maxLength": 20000
                         },
                         "menge": {
                           "type": "number",
@@ -22615,6 +22834,79 @@
                           "type": "string",
                           "format": "uuid",
                           "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "oz": {
+                          "nullable": true,
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 40
+                        },
+                        "gaeb": {
+                          "nullable": true,
+                          "type": "object",
+                          "properties": {
+                            "art": {
+                              "type": "string",
+                              "enum": [
+                                "normal",
+                                "grund",
+                                "wahl",
+                                "bedarf_mit_gb",
+                                "bedarf_ohne_gb",
+                                "hinweis",
+                                "ausfuehrung",
+                                "bereich",
+                                "los"
+                              ]
+                            },
+                            "id": {
+                              "nullable": true,
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 80
+                            },
+                            "ebene": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9
+                            },
+                            "zulage": {
+                              "type": "boolean"
+                            },
+                            "pauschal": {
+                              "type": "boolean"
+                            },
+                            "stundenlohn": {
+                              "type": "boolean"
+                            },
+                            "altGruppe": {
+                              "type": "string",
+                              "maxLength": 10
+                            },
+                            "altNr": {
+                              "type": "string",
+                              "maxLength": 10
+                            },
+                            "einheit": {
+                              "type": "string",
+                              "maxLength": 20
+                            },
+                            "menge": {
+                              "type": "number",
+                              "minimum": -1000000000,
+                              "maximum": 1000000000
+                            },
+                            "gekuerzt": {
+                              "type": "boolean"
+                            },
+                            "inSumme": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "art"
+                          ],
+                          "additionalProperties": false
                         }
                       },
                       "required": [
@@ -22765,6 +23057,363 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/gaeb/vorgaenge": {
+      "post": {
+        "tags": [
+          "Ausschreibungen (GAEB)"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Ausschreibungen (GAEB)"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "query",
+            "name": "angebotId",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "query",
+            "name": "kundeId",
+            "required": false
+          },
+          {
+            "schema": {
+              "default": 50,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200
+            },
+            "in": "query",
+            "name": "limit",
+            "required": false
+          },
+          {
+            "schema": {
+              "default": 0,
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "in": "query",
+            "name": "offset",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/gaeb/vorgaenge/{id}": {
+      "get": {
+        "tags": [
+          "Ausschreibungen (GAEB)"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/gaeb/vorgaenge/{id}/auftrag": {
+      "post": {
+        "tags": [
+          "Ausschreibungen (GAEB)"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/gaeb/vorgaenge/{id}/vorschlaege": {
+      "get": {
+        "tags": [
+          "Ausschreibungen (GAEB)"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "default": 0,
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "in": "query",
+            "name": "offset",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "0",
+                "1",
+                "true",
+                "false",
+                ""
+              ]
+            },
+            "in": "query",
+            "name": "alle",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/gaeb/vorgaenge/{id}/x84": {
+      "post": {
+        "tags": [
+          "Ausschreibungen (GAEB)"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ohnePreisBestaetigt": {
+                    "type": "boolean"
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/gaeb/vorgaenge/{id}/x84/download": {
+      "get": {
+        "tags": [
+          "Ausschreibungen (GAEB)"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/gaeb/vorgaenge/{id}/x86": {
+      "post": {
+        "tags": [
+          "Ausschreibungen (GAEB)"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/gaeb/vorgaenge/{id}/zuordnung": {
+      "put": {
+        "tags": [
+          "Ausschreibungen (GAEB)"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "zuordnungen": {
+                    "minItems": 1,
+                    "maxItems": 200,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "positionId": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "ziel": {
+                          "type": "string",
+                          "enum": [
+                            "artikel",
+                            "kalkulation",
+                            "lohn",
+                            "frei"
+                          ]
+                        },
+                        "artikelId": {
+                          "nullable": true,
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "kalkulationsArt": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 40
+                        },
+                        "quelleId": {
+                          "nullable": true,
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "einzelpreisCent": {
+                          "nullable": true,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 2000000000
+                        }
+                      },
+                      "required": [
+                        "positionId",
+                        "ziel"
+                      ]
+                    }
+                  },
+                  "ohneNeueFassung": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "zuordnungen"
+                ]
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/gaeb/vorschau": {
+      "post": {
+        "tags": [
+          "Ausschreibungen (GAEB)"
+        ],
         "responses": {
           "200": {
             "description": "Default Response"
@@ -46205,7 +46854,7 @@
                         "beschreibung": {
                           "nullable": true,
                           "type": "string",
-                          "maxLength": 4000
+                          "maxLength": 20000
                         },
                         "menge": {
                           "type": "number",
@@ -46279,6 +46928,79 @@
                           "type": "string",
                           "format": "uuid",
                           "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "oz": {
+                          "nullable": true,
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 40
+                        },
+                        "gaeb": {
+                          "nullable": true,
+                          "type": "object",
+                          "properties": {
+                            "art": {
+                              "type": "string",
+                              "enum": [
+                                "normal",
+                                "grund",
+                                "wahl",
+                                "bedarf_mit_gb",
+                                "bedarf_ohne_gb",
+                                "hinweis",
+                                "ausfuehrung",
+                                "bereich",
+                                "los"
+                              ]
+                            },
+                            "id": {
+                              "nullable": true,
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 80
+                            },
+                            "ebene": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9
+                            },
+                            "zulage": {
+                              "type": "boolean"
+                            },
+                            "pauschal": {
+                              "type": "boolean"
+                            },
+                            "stundenlohn": {
+                              "type": "boolean"
+                            },
+                            "altGruppe": {
+                              "type": "string",
+                              "maxLength": 10
+                            },
+                            "altNr": {
+                              "type": "string",
+                              "maxLength": 10
+                            },
+                            "einheit": {
+                              "type": "string",
+                              "maxLength": 20
+                            },
+                            "menge": {
+                              "type": "number",
+                              "minimum": -1000000000,
+                              "maximum": 1000000000
+                            },
+                            "gekuerzt": {
+                              "type": "boolean"
+                            },
+                            "inSumme": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "art"
+                          ],
+                          "additionalProperties": false
                         }
                       },
                       "required": [
@@ -46445,7 +47167,7 @@
                         "beschreibung": {
                           "nullable": true,
                           "type": "string",
-                          "maxLength": 4000
+                          "maxLength": 20000
                         },
                         "menge": {
                           "type": "number",
@@ -46519,6 +47241,79 @@
                           "type": "string",
                           "format": "uuid",
                           "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "oz": {
+                          "nullable": true,
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 40
+                        },
+                        "gaeb": {
+                          "nullable": true,
+                          "type": "object",
+                          "properties": {
+                            "art": {
+                              "type": "string",
+                              "enum": [
+                                "normal",
+                                "grund",
+                                "wahl",
+                                "bedarf_mit_gb",
+                                "bedarf_ohne_gb",
+                                "hinweis",
+                                "ausfuehrung",
+                                "bereich",
+                                "los"
+                              ]
+                            },
+                            "id": {
+                              "nullable": true,
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 80
+                            },
+                            "ebene": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9
+                            },
+                            "zulage": {
+                              "type": "boolean"
+                            },
+                            "pauschal": {
+                              "type": "boolean"
+                            },
+                            "stundenlohn": {
+                              "type": "boolean"
+                            },
+                            "altGruppe": {
+                              "type": "string",
+                              "maxLength": 10
+                            },
+                            "altNr": {
+                              "type": "string",
+                              "maxLength": 10
+                            },
+                            "einheit": {
+                              "type": "string",
+                              "maxLength": 20
+                            },
+                            "menge": {
+                              "type": "number",
+                              "minimum": -1000000000,
+                              "maximum": 1000000000
+                            },
+                            "gekuerzt": {
+                              "type": "boolean"
+                            },
+                            "inSumme": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "art"
+                          ],
+                          "additionalProperties": false
                         }
                       },
                       "required": [

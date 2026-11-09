@@ -236,6 +236,7 @@ export declare const HILFE: {
     readonly "projekte.nachkalkulation": HilfeThema;
     readonly "projekte.nachkalkulation.berechnung": HilfeThema;
     readonly "projekte.nachkalkulation.stundensaetze": HilfeThema;
+    readonly "vertrieb.angebote.gaeb": HilfeThema;
     readonly "administration.api_zugaenge": HilfeThema;
     readonly "vertrieb.kundenportal": HilfeThema;
     readonly "vertrieb.kundenportal.eingang": HilfeThema;
