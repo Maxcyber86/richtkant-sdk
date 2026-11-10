@@ -21,4 +21,14 @@ export interface BedarfsPosition {
         lager: number;
     };
         schluessel?: string;
+        bestellEinheit?: {
+        id: string;
+        einheit: string;
+        faktor: number;
+        mindestmenge: number | null;
+        staffel: number | null;
+    } | null;
+    bestellMenge?: number | null;
+    ekCentEinheit?: number | null;
+        gtin?: string | null;
 }

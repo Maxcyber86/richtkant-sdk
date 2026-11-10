@@ -10,4 +10,5 @@ export interface Etikett {
     /** kleine Kennzeichnung oben rechts, z. B. „3/8“ */
     marke?: string | null;
     isTest: boolean;
+        gtin?: string | null;
 }

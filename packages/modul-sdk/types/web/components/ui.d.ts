@@ -38,9 +38,14 @@ export declare function SelectInput({ label, hint, error, className, id, childre
     error?: string | null;
 }): import("react").JSX.Element;
 /** Zahleneingabe mit deutschem Dezimalkomma. Liefert null bei leerer Eingabe. */
-export declare function NumberInput({ label, value, onChange, unit, digits, min, max, hint, className, id, disabled, placeholder, required, fixed, ariaLabel, }: {
+export declare function NumberInput({ label, value, onChange, unit, digits, min, max, hint, className, id, disabled, placeholder, required, fixed, ariaLabel, onScanCode, }: {
     /** Zugänglicher Name, wenn keine sichtbare Beschriftung vorhanden ist */
     ariaLabel?: string;
+    /**
+     * 0.16.9: Mengenfeld an einer Scan-Erfassungsstelle – landet die Eingabe eines Tastatur-Scanners (GTIN) im Feld, bleibt
+     * die Menge unverändert und der Code geht an diese Funktion (z. B. wie ein Scan im Scanfeld).
+     */
+    onScanCode?: (code: string) => void;
     /** Nachkommastellen immer anzeigen (z. B. Geldbeträge) */
     fixed?: boolean;
     label?: string;

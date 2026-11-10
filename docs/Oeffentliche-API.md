@@ -1,10 +1,10 @@
 # Öffentliche API (Instanz-API /api/v1)
 
-Richtkant ERP 0.16.8 · Modulvertrag 2.2.0 · Stand 2026-11-09
+Richtkant ERP 0.16.9 · Modulvertrag 2.2.0 · Stand 2026-11-10
 Verantwortlich: Christian Heitzer, www.heitzer.info
 
 Die maschinenlesbare Beschreibung aller über einen API-Zugang erreichbaren Endpunkte liegt in
-[openapi/openapi.json](../openapi/openapi.json) (OpenAPI 3, erzeugt aus Richtkant Core 0.16.8 ohne Module; Endpunkte, die über
+[openapi/openapi.json](../openapi/openapi.json) (OpenAPI 3, erzeugt aus Richtkant Core 0.16.9 ohne Module; Endpunkte, die über
 die API immer gesperrt sind, sind dort nicht enthalten). Jede Instanz liefert ihre eigene, vollständige Beschreibung unter
 `GET /api/v1/openapi.json`, einschließlich der Endpunkte ihrer installierten Module.
 
@@ -86,6 +86,43 @@ curl -s -X POST -H "Authorization: Bearer $RK_API" -H "Content-Type: application
 - Eine unverträgliche Änderung käme unter `/api/v2`; `/api/v1` liefe dann mindestens zwölf Monate parallel (Hinweis im Changelog
   und in der Kopfzeile `Deprecation`).
 - Die Programmversion steht in der Kopfzeile `X-Richtkant-Version`.
+
+### 5a. Personen an Einsätzen (ab 0.16.9)
+
+Seit 0.16.9 werden Einsätze der Personalakte zugeteilt; auch Helfer ohne Benutzerkonto lassen sich einplanen.
+`GET /api/v1/einsaetze` und `GET /api/v1/einsaetze/{id}` liefern je Person in `mitarbeiter[]`:
+
+| Feld | Bedeutung |
+|---|---|
+| `id` | **Personenkennung, kein fester Typ:** die Benutzer-ID, wenn die Person ein Benutzerkonto hat (unverändert wie bis 0.16.8), sonst die Mitarbeiter-ID (Personalakte). Bitte nicht als Mitarbeiter-ID auswerten. |
+| `mitarbeiterId` | Mitarbeiter-ID (Personalakte) oder `null`, wenn die Zuteilung nur über ein Konto ohne passende Akte besteht. |
+| `benutzerId` | Benutzer-ID oder `null` bei Helfern ohne Konto. |
+| `konto` | `true`, wenn die Person ein Benutzerkonto hat. |
+
+- Zum Abgleich mit Personal- bzw. Lohnsystemen `mitarbeiterId` verwenden, für Konten `benutzerId`; `id` nur als Kennung innerhalb
+  der Antwort bzw. beim Einplanen (die Liste `mitarbeiter` beim Anlegen/Ändern nimmt Benutzer- oder Mitarbeiter-IDs an).
+- Filter `?mitarbeiterId=` (Mitarbeiter-ID): trifft Zuteilungen über die Akte und – wie bis 0.16.8 – Zuteilungen über das mit der
+  Akte verknüpfte Benutzerkonto.
+- Wechselt das Konto einer Akte, gehen ihre Zuteilungen auf das neue Konto über; `id` ändert sich dann entsprechend.
+
+### 5b. Bestellpositionen mit Bestelleinheit (ab 0.16.9)
+
+Seit 0.16.9 kann eine Bestellposition in einer Bestelleinheit des Artikels bestellt sein (z. B. Karton = 50 Stück).
+`GET /api/v1/bestellungen/{id}` liefert dann zusätzlich `bestellEinheit`, `bestellFaktor`, `bestellMenge` und `ekCentEinheit`
+(Preis je Bestelleinheit); `menge` und `ekCent` bleiben wie bis 0.16.8 in der Lagereinheit (`ekCent` auf ganze Cent gerundet).
+
+Beim Ändern bzw. Anlegen (`PUT /api/v1/bestellungen/{id}/positionen`, `POST /api/v1/bestellungen`) gilt je Position:
+
+| Angabe | `menge` und `ekCent` gelten … |
+|---|---|
+| ohne `einheitId` (Aufrufer bis 0.16.8) | **je Lagereinheit.** Eine vorhandene Bestelleinheit bleibt; die Anzahl Bestelleinheiten wird berechnet und muss ganz sein, sonst `400` (z. B. 160 Stück bei Karton = 50). Ein unverändert zurückgesendeter `ekCent` behält den genauen Preis je Bestelleinheit, ein geänderter wird mit dem Faktor umgerechnet. |
+| `einheitId` = ID einer Einheit des Artikels | je dieser Einheit (Preis je Bestelleinheit). |
+| `einheitId: null` | je Lagereinheit, ohne Bestelleinheit. |
+| ohne `einheitId`, `mengeInBestelleinheit: true` | je vorhandener Bestelleinheit der Position (so arbeitet die Oberfläche). |
+
+Preisanfragen (`/api/v1/einkauf/preisanfragen`) nehmen je Artikelposition optional `einheitId` an; Menge und Angebotspreise gelten
+dann je dieser Einheit. Exporte in offenen Formaten: `GET /api/v1/einkauf/preisanfragen/export?format=csv|json` und
+`GET /api/v1/articles/einheiten/export?format=csv|json` (jeweils `demo=true` mit Demodaten).
 
 ## 6. Protokoll und Datenschutz
 

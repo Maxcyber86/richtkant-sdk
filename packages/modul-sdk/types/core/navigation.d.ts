@@ -28,6 +28,8 @@ export declare const ROUTES: {
     readonly eingangsrechnung: "/eingangsrechnungen/:id";
     readonly bestellungen: "/bestellungen";
     readonly bestellung: "/bestellungen/:id";
+    readonly preisanfragen: "/preisanfragen";
+    readonly preisanfrage: "/preisanfragen/:id";
     readonly lager: "/lager";
     readonly projekte: "/projekte";
     readonly projekt: "/projekte/:id";
@@ -35,7 +37,8 @@ export declare const ROUTES: {
     readonly personal: "/personal";
     readonly mitarbeiter: "/personal/:id";
     readonly abwesenheiten: "/abwesenheiten";
-    readonly auslastung: "/auslastung";
+        readonly auslastung: "/auslastung";
+        readonly kapazitaet: "/kapazitaet";
     readonly qualifikationen: "/qualifikationen";
     readonly entwicklung: "/entwicklung";
     readonly feedback: "/entwicklung/feedback/:id";
@@ -78,7 +81,7 @@ export declare const ROUTES: {
     readonly betriebsmittelPruefungen: "/betriebsmittel/pruefungen";
     readonly betriebsmittelDetail: "/betriebsmittel/:id";
     readonly betriebsmittelAusleihe: "/betriebsmittel/ausleihe";
-    readonly betriebsmittelAuslastung: "/betriebsmittel/auslastung";
+        readonly betriebsmittelAuslastung: "/betriebsmittel/auslastung";
     readonly wareneingang: "/wareneingang";
     readonly wareneingangPruefen: "/wareneingang/pruefen/:id";
     /**
@@ -298,6 +301,17 @@ export declare const FUNKTIONEN: readonly [{
     readonly permissions: ["bestellungen.lesen"];
     readonly menue: true;
 }, {
+    readonly key: "einkauf.preisanfragen";
+    readonly modul: "einkauf";
+    readonly label: "Preisanfragen";
+    readonly titel: "Preisanfragen an Lieferanten";
+    readonly short: "Anfragen";
+    readonly ziel: {
+        readonly route: "preisanfragen";
+    };
+    readonly permissions: ["bestellungen.lesen"];
+    readonly menue: true;
+}, {
     readonly key: "einkauf.lieferanten";
     readonly modul: "einkauf";
     readonly label: "Lieferanten";
@@ -442,6 +456,16 @@ export declare const FUNKTIONEN: readonly [{
     readonly permissions: ["einsaetze.lesen"];
     readonly menue: true;
     readonly mobil: 3;
+}, {
+    readonly key: "projekte.kapazitaet";
+    readonly modul: "projekte";
+    readonly label: "Kapazität";
+    readonly titel: "Kapazität: Personen und Betriebsmittel";
+    readonly ziel: {
+        readonly route: "kapazitaet";
+    };
+    readonly permissions: ["personal.lesen", "projekte.planen", "einsaetze.planen", "betriebsmittel.lesen", "shopfloor.lesen", "arbeitsauftraege.planen"];
+    readonly menue: true;
 }, {
     readonly key: "projekte.meine_einsaetze";
     readonly modul: "projekte";
@@ -640,12 +664,16 @@ export declare const FUNKTIONEN: readonly [{
 }, {
     readonly key: "personal.auslastung";
     readonly modul: "personal";
-    readonly label: "Auslastung";
+    readonly label: "Auslastung Personen";
+    readonly titel: "Kapazität: Personen";
     readonly ziel: {
-        readonly route: "auslastung";
+        readonly route: "kapazitaet";
+        readonly query: {
+            readonly ansicht: "personen";
+        };
     };
     readonly permissions: ["personal.lesen", "projekte.planen", "einsaetze.planen"];
-    readonly menue: true;
+    readonly unter: "projekte.kapazitaet";
 }, {
     readonly key: "personal.qualifikationen";
     readonly modul: "personal";
@@ -785,6 +813,7 @@ export declare const FUNKTIONEN: readonly [{
         readonly route: "verbesserungen";
     };
     readonly menue: true;
+    readonly menueBereich: "wissen";
 }, {
     readonly key: "administration.systemuebersicht";
     readonly modul: "administration";
@@ -1392,14 +1421,17 @@ export declare const FUNKTIONEN: readonly [{
 }, {
     readonly key: "betriebsmittel.auslastung";
     readonly modul: "betriebsmittel";
-    readonly label: "Auslastung";
-    readonly titel: "Auslastung der Betriebsmittel";
+    readonly label: "Auslastung Betriebsmittel";
+    readonly titel: "Kapazität: Betriebsmittel";
     readonly short: "Auslastung";
     readonly ziel: {
-        readonly route: "betriebsmittelAuslastung";
+        readonly route: "kapazitaet";
+        readonly query: {
+            readonly ansicht: "betriebsmittel";
+        };
     };
     readonly permissions: ["betriebsmittel.lesen", "shopfloor.lesen", "arbeitsauftraege.planen", "personal.lesen", "projekte.planen", "einsaetze.planen"];
-    readonly menue: true;
+    readonly unter: "projekte.kapazitaet";
 }, {
     readonly key: "betriebsmittel.teams";
     readonly modul: "betriebsmittel";
@@ -1570,6 +1602,21 @@ export declare const FUNKTIONEN: readonly [{
     readonly permissions: ["einstellungen.verwalten"];
     readonly admin: "Fachbereiche";
     readonly rang: 63.7;
+}, {
+    readonly key: "administration.auswahllisten";
+    readonly modul: "administration";
+    readonly label: "Auswahllisten";
+    readonly titel: "Auswahllisten: Texte, Reihenfolge und eigene Einträge";
+    readonly ziel: {
+        query?: Record<string, string> | undefined;
+        route: "admin";
+        params: {
+            bereich: string;
+        };
+    };
+    readonly permissions: ["einstellungen.verwalten"];
+    readonly admin: "Fachbereiche";
+    readonly rang: 62.5;
 }, {
     readonly key: "projekte.stundensaetze";
     readonly modul: "projekte";
@@ -1749,6 +1796,12 @@ export declare const ENTITAETEN: {
         readonly label: "Bestellung";
         readonly route: "bestellung";
         readonly funktion: "einkauf.bestellungen";
+        readonly pfad: (id: string, q?: Query) => string;
+    };
+    readonly preisanfrage: {
+        readonly label: "Preisanfrage";
+        readonly route: "preisanfrage";
+        readonly funktion: "einkauf.preisanfragen";
         readonly pfad: (id: string, q?: Query) => string;
     };
     readonly projekt: {
@@ -2054,6 +2107,12 @@ export declare const NUMMERNKREISE: {
     readonly leihschein: {
         readonly praefix: "LH";
         readonly sequenz: "leihschein_nr_seq";
+        readonly stellen: 5;
+        readonly jahr: true;
+    };
+    readonly preisanfrage: {
+        readonly praefix: "PA";
+        readonly sequenz: "preisanfrage_nr_seq";
         readonly stellen: 5;
         readonly jahr: true;
     };

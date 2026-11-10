@@ -236,6 +236,11 @@ export declare const HILFE: {
     readonly "projekte.nachkalkulation": HilfeThema;
     readonly "projekte.nachkalkulation.berechnung": HilfeThema;
     readonly "projekte.nachkalkulation.stundensaetze": HilfeThema;
+    readonly "finanzen.buchhaltung.datev_paket": HilfeThema;
+    readonly "finanzen.eingangsrechnungen.kontierung": HilfeThema;
+    readonly "administration.buchhaltung.datev_kreditoren": HilfeThema;
+    readonly "material.artikel.einheiten": HilfeThema;
+    readonly "einkauf.preisanfragen": HilfeThema;
     readonly "vertrieb.angebote.gaeb": HilfeThema;
     readonly "administration.api_zugaenge": HilfeThema;
     readonly "vertrieb.kundenportal": HilfeThema;
@@ -314,6 +319,7 @@ export declare const HILFE: {
     readonly "administration.benachrichtigungen.kanaele": HilfeThema;
     readonly "administration.benachrichtigungen.arten": HilfeThema;
     readonly "administration.benachrichtigungen.zeiten": HilfeThema;
+    readonly "administration.auswahllisten": HilfeThema;
     readonly "modul.administration": HilfeThema;
     readonly "administration.systemuebersicht": HilfeThema;
     readonly "administration.systemuebersicht.einrichtung": HilfeThema;
@@ -467,6 +473,8 @@ export declare const HILFE: {
     readonly "projekte.einsatzplanung": HilfeThema;
     readonly "projekte.einsatzplanung.wochenplan": HilfeThema;
     readonly "projekte.einsatzplanung.einsatz": HilfeThema;
+    readonly "projekte.kapazitaet": HilfeThema;
+    readonly "projekte.einsatzplanung.helfer": HilfeThema;
     readonly "projekte.einsatzplanung.outlook": HilfeThema;
     readonly "projekte.einsatzplanung.kalenderantworten": HilfeThema;
     readonly "projekte.meine_einsaetze": HilfeThema;

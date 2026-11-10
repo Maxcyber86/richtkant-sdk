@@ -1,6 +1,6 @@
 # Beispielmodul „Prüfpunkte“
 
-Kleines, vollständiges Modul für Richtkant ERP 0.16.8 (Modulvertrag `^2.2.0`): wiederkehrende Prüfpunkte mit
+Kleines, vollständiges Modul für Richtkant ERP 0.16.9 (Modulvertrag `^2.2.0`): wiederkehrende Prüfpunkte mit
 Prüfintervall, Fälligkeit und „geprüft“-Markierung. Aufbau wie die Module des Herstellers:
 
 ```

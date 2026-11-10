@@ -40,6 +40,7 @@ export interface BenutzerEinstellungen {
     darstellung?: 'classic' | 'modern';
     /** Funktionsschlüssel aus dem Anwendungsverzeichnis */
     favoriten?: AnyFunktionKey[];
+        adminNavZu?: string[];
 }
 export interface Phone {
     typ: 'festnetz' | 'mobil' | 'fax' | 'zentrale';
@@ -72,6 +73,7 @@ export interface Customer {
         branche?: string | null;
     kundengruppe?: string | null;
         kreditlimitCent?: number | null;
+        datevKonto?: number | null;
         skontoTage?: number | null;
     skontoProzent?: number | string | null;
     skonto2Tage?: number | null;

@@ -1,6 +1,6 @@
 {
   "name": "richtkant-sdk",
-  "version": "0.16.8",
+  "version": "0.16.9",
   "private": true,
   "description": "Richtkant Modul-SDK: Typdeklarationen, Dokumentation, OpenAPI-Beschreibung und Beispielmodul",
   "license": "Apache-2.0",

@@ -1,6 +1,7 @@
 export interface BenutzerEinstellungen {
     darstellung?: 'classic' | 'modern';
     favoriten?: string[];
+        adminNavZu?: string[];
 }
 export declare const users: import("drizzle-orm/pg-core").PgTableWithColumns<{
     name: "users";
