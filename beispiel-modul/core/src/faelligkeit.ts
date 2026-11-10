@@ -19,14 +19,20 @@ export const BALD_FAELLIG_TAGE = 14;
 const TAG_MS = 86_400_000;
 const KALENDERTAG = /^\d{4}-\d{2}-\d{2}$/;
 
+const tagText = (zahl: number): string => new Date(zahl * TAG_MS).toISOString().slice(0, 10);
+
+/**
+ * Kalendertag als fortlaufende Tageszahl. Nicht existierende Tage (z. B. 31.02. oder 29.02. außerhalb eines Schaltjahrs) werden
+ * abgelehnt statt in den Folgemonat verschoben: Der Tag muss nach der Umrechnung unverändert zurückkommen.
+ */
 function tagZahl(tag: string): number {
   if (!KALENDERTAG.test(tag)) throw new Error(`Ungültiger Kalendertag: ${tag}`);
   const ms = Date.parse(`${tag}T00:00:00Z`);
   if (Number.isNaN(ms)) throw new Error(`Ungültiger Kalendertag: ${tag}`);
-  return Math.round(ms / TAG_MS);
+  const zahl = Math.round(ms / TAG_MS);
+  if (tagText(zahl) !== tag) throw new Error(`Ungültiger Kalendertag: ${tag}`);
+  return zahl;
 }
-
-const tagText = (zahl: number): string => new Date(zahl * TAG_MS).toISOString().slice(0, 10);
 
 /**
  * Fälligkeit berechnen. `letztePruefung` und `heute` sind Kalendertage (JJJJ-MM-TT, ohne Zeitzone), `intervallTage`

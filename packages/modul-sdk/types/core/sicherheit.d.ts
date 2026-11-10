@@ -10,5 +10,6 @@ export declare const BESTAETIGUNG_ZWECKE: {
     readonly system_wartung: "Wartung mit automatischem Beginn ankündigen, beginnen, beenden oder eine Wartung des Anbieters zurückziehen";
     readonly sicherung_herunterladen: "Datensicherung herunterladen";
     readonly glas_auflagen: "Freigabe unter Auflagen";
+    readonly benutzer_loeschen: "Benutzerkonto löschen";
 };
 export type BestaetigungZweck = keyof typeof BESTAETIGUNG_ZWECKE;

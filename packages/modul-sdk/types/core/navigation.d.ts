@@ -130,7 +130,7 @@ export declare const ERP_MODULE: readonly [{
     readonly key: "finanzen";
     readonly name: "Finanzen & Buchhaltung";
     readonly menue: "Finanzen";
-    readonly permissions: ["rechnungen.festschreiben", "eingangsrechnungen.pruefen", "eingangsrechnungen.freigeben", "eingangsrechnungen.freigeben_unbegrenzt", "gobd.export", "buchhaltung.schnittstellen_verwalten", "buchhaltung.export_ausfuehren", "buchhaltung.protokoll_einsehen", "mahnwesen.lesen", "mahnwesen.vorschlag_bearbeiten", "mahnwesen.versenden", "mahnwesen.verwalten", "sepa.freigeben", "bank.verwalten", "bank.abgleich"];
+    readonly permissions: ["rechnungen.festschreiben", "eingangsrechnungen.pruefen", "eingangsrechnungen.freigeben", "eingangsrechnungen.freigeben_unbegrenzt", "gobd.export", "buchhaltung.schnittstellen_verwalten", "buchhaltung.export_ausfuehren", "buchhaltung.protokoll_einsehen", "mahnwesen.lesen", "mahnwesen.vorschlag_bearbeiten", "mahnwesen.versenden", "mahnwesen.verwalten", "sepa.freigeben", "zahlungsrichtlinien.verwalten", "bankdaten.bestaetigen", "bank.verwalten", "bank.abgleich"];
 }, {
     readonly key: "personal";
     readonly name: "Personal";
@@ -561,6 +561,21 @@ export declare const FUNKTIONEN: readonly [{
     readonly permissions: ["mahnwesen.lesen"];
     readonly menue: true;
 }, {
+    readonly key: "finanzen.zahlungsfreigaben";
+    readonly modul: "finanzen";
+    readonly label: "Zahlungsfreigaben";
+    readonly titel: "Zahlungsfreigaben: Vier-Augen-Prinzip je Zahlungsart und Bankdatenbestätigung";
+    readonly ziel: {
+        query?: Record<string, string> | undefined;
+        route: "admin";
+        params: {
+            bereich: string;
+        };
+    };
+    readonly permissions: ["zahlungsrichtlinien.verwalten"];
+    readonly admin: "Fachbereiche";
+    readonly rang: 66.4;
+}, {
     readonly key: "finanzen.mahnstufen";
     readonly modul: "finanzen";
     readonly label: "Mahnstufen";
@@ -860,7 +875,7 @@ export declare const FUNKTIONEN: readonly [{
     readonly key: "administration.sicherheit";
     readonly modul: "administration";
     readonly label: "Anmeldung und Sicherheit";
-    readonly titel: "Anmeldung und Sicherheit: Zwei-Faktor, Passkeys, Zahlungsfreigabe";
+    readonly titel: "Anmeldung und Sicherheit: Zwei-Faktor, Passkeys";
     readonly ziel: {
         query?: Record<string, string> | undefined;
         route: "admin";

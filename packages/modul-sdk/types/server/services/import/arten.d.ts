@@ -60,6 +60,8 @@ export interface ImportArtAdapter {
         zielId: string;
         aktion: string;
         vorher: Record<string, unknown> | null;
+    }, k?: {
+        userId: string | null;
     }) => Promise<void>;
     /**
      * Optional: mehrere Zeilen mengenbasiert anwenden (Ergebnis je Zeile in derselben Reihenfolge). Alles oder nichts: Bei

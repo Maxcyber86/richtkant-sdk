@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Richtkant ERP API",
-    "version": "0.16.9",
+    "version": "0.16.10",
     "description": "Öffentliche API: Anmeldung mit `Authorization: Bearer rkapi_…` (API-Zugang unter Administration › Schnittstellen › API-Zugänge). Beträge in Cent."
   },
   "components": {
@@ -5955,6 +5955,19 @@
         "operationId": "getBankZugang"
       }
     },
+    "/api/v1/bankverbindungen/offen": {
+      "get": {
+        "tags": [
+          "Buchhaltung & Zahlungsverkehr"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "getBankverbindungenOffen"
+      }
+    },
     "/api/v1/beleg-mailvorlagen": {
       "get": {
         "tags": [
@@ -6807,6 +6820,19 @@
           }
         },
         "operationId": "getBestellungen"
+      }
+    },
+    "/api/v1/bestellungen/kennzahlen": {
+      "get": {
+        "tags": [
+          "Einkauf"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "getBestellungenKennzahlen"
       }
     },
     "/api/v1/bestellungen/{id}": {
@@ -9968,6 +9994,21 @@
             "in": "query",
             "name": "limit",
             "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "0",
+                "1",
+                "true",
+                "false",
+                ""
+              ]
+            },
+            "in": "query",
+            "name": "nurAnzahl",
+            "required": false
           }
         ],
         "responses": {
@@ -12226,6 +12267,9 @@
                       },
                       "ausfuhr": {
                         "anyOf": []
+                      },
+                      "klein19": {
+                        "anyOf": []
                       }
                     }
                   },
@@ -12252,6 +12296,9 @@
                       },
                       "ausfuhr": {
                         "anyOf": []
+                      },
+                      "klein19": {
+                        "anyOf": []
                       }
                     }
                   },
@@ -12277,6 +12324,9 @@
                         "anyOf": []
                       },
                       "ausfuhr": {
+                        "anyOf": []
+                      },
+                      "klein19": {
                         "anyOf": []
                       }
                     }
@@ -16343,7 +16393,8 @@
                       "bau13b",
                       "eu_rc",
                       "igl",
-                      "ausfuhr"
+                      "ausfuhr",
+                      "klein19"
                     ]
                   },
                   "kaeuferReferenz": {
@@ -16712,6 +16763,32 @@
           }
         },
         "operationId": "postDocuments"
+      }
+    },
+    "/api/v1/documents/angebote/offen": {
+      "get": {
+        "tags": [
+          "Belege"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "default": 6,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 20
+            },
+            "in": "query",
+            "name": "anzahl",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "getDocumentsAngeboteOffen"
       }
     },
     "/api/v1/documents/einbehalt/vorschlag": {
@@ -17340,7 +17417,8 @@
                       "bau13b",
                       "eu_rc",
                       "igl",
-                      "ausfuhr"
+                      "ausfuhr",
+                      "klein19"
                     ]
                   },
                   "kaeuferReferenz": {
@@ -25883,6 +25961,31 @@
         "operationId": "postImporteByIdPruefen"
       }
     },
+    "/api/v1/importe/{id}/regelvorschlaege": {
+      "get": {
+        "tags": [
+          "Datenimport"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "getImporteByIdRegelvorschlaege"
+      }
+    },
     "/api/v1/importe/{id}/rueckgaengig": {
       "post": {
         "tags": [
@@ -26126,6 +26229,10 @@
                         "type": "boolean"
                       }
                     }
+                  },
+                  "umwandlungen": {
+                    "type": "object",
+                    "additionalProperties": {}
                   }
                 }
               }
@@ -42047,6 +42154,10 @@
                       }
                     ]
                   },
+                  "kleinunternehmer": {
+                    "default": false,
+                    "type": "boolean"
+                  },
                   "geschaeftsfuehrung": {
                     "anyOf": [
                       {
@@ -47812,6 +47923,31 @@
         "operationId": "getUsers"
       }
     },
+    "/api/v1/users/{id}/loeschen": {
+      "get": {
+        "tags": [
+          "Benutzer"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "getUsersByIdLoeschen"
+      }
+    },
     "/api/v1/verlauf": {
       "get": {
         "tags": [
@@ -53281,6 +53417,48 @@
         "operationId": "postZahlungseingaengeByIdZuruecknehmen"
       }
     },
+    "/api/v1/zahlungsrichtlinien": {
+      "get": {
+        "tags": [
+          "Buchhaltung & Zahlungsverkehr"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "getZahlungsrichtlinien"
+      }
+    },
+    "/api/v1/zahlungsrichtlinien/{art}/versionen": {
+      "get": {
+        "tags": [
+          "Buchhaltung & Zahlungsverkehr"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ueberweisung_lauf",
+                "lastschrift",
+                "ueberweisung_einzeln",
+                "auszahlung_erstattung"
+              ]
+            },
+            "in": "path",
+            "name": "art",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "getZahlungsrichtlinienByArtVersionen"
+      }
+    },
     "/api/v1/zahlungsverkehr/datev": {
       "post": {
         "tags": [
@@ -53649,9 +53827,11 @@
               "type": "string",
               "enum": [
                 "angefordert",
+                "teilweise_freigegeben",
                 "freigegeben",
                 "abgelehnt",
-                "zurueckgezogen"
+                "zurueckgezogen",
+                "verfallen"
               ]
             },
             "in": "query",
@@ -53676,133 +53856,6 @@
           }
         },
         "operationId": "getZahlungsverkehrFreigaben"
-      }
-    },
-    "/api/v1/zahlungsverkehr/freigaben/{id}/ablehnen": {
-      "post": {
-        "tags": [
-          "Buchhaltung & Zahlungsverkehr"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "begruendung": {
-                    "type": "string",
-                    "minLength": 3,
-                    "maxLength": 500
-                  }
-                },
-                "required": [
-                  "begruendung"
-                ]
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
-            },
-            "in": "path",
-            "name": "id",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Default Response"
-          }
-        },
-        "operationId": "postZahlungsverkehrFreigabenByIdAblehnen"
-      }
-    },
-    "/api/v1/zahlungsverkehr/freigaben/{id}/freigeben": {
-      "post": {
-        "tags": [
-          "Buchhaltung & Zahlungsverkehr"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "begruendung": {
-                    "type": "string",
-                    "maxLength": 500
-                  }
-                }
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
-            },
-            "in": "path",
-            "name": "id",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Default Response"
-          }
-        },
-        "operationId": "postZahlungsverkehrFreigabenByIdFreigeben"
-      }
-    },
-    "/api/v1/zahlungsverkehr/freigaben/{id}/zurueckziehen": {
-      "post": {
-        "tags": [
-          "Buchhaltung & Zahlungsverkehr"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "begruendung": {
-                    "type": "string",
-                    "maxLength": 500
-                  }
-                }
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
-            },
-            "in": "path",
-            "name": "id",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Default Response"
-          }
-        },
-        "operationId": "postZahlungsverkehrFreigabenByIdZurueckziehen"
       }
     },
     "/api/v1/zahlungsverkehr/gobd": {

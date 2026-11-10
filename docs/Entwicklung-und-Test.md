@@ -1,6 +1,6 @@
 # Entwicklung und Test eines Moduls
 
-Richtkant ERP 0.16.9 · Modulvertrag 2.2.0 · Stand 2026-11-10
+Richtkant ERP 0.16.10 · Modulvertrag 2.2.0 · Stand 2026-11-10
 Verantwortlich: Christian Heitzer, www.heitzer.info
 
 ## 0. Abgrenzung

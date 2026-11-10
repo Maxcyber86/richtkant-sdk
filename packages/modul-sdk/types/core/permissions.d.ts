@@ -72,7 +72,9 @@ export declare const PERMISSIONS: {
     readonly 'mahnwesen.vorschlag_bearbeiten': "Mahnvorschläge erstellen und prüfen, Mahnsperren setzen und aufheben";
     readonly 'mahnwesen.versenden': "Geprüfte Mahnvorschläge freigeben und Mahnungen versenden";
     readonly 'mahnwesen.verwalten': "Mahnstufen, Gebühren, Verzugszinsen und Mahntexte einstellen";
-    readonly 'sepa.freigeben': "SEPA-Zahlungsdateien im Vier-Augen-Prinzip freigeben";
+    readonly 'sepa.freigeben': "Zahlungen freigeben (SEPA-Dateien im Vier-Augen-Prinzip)";
+    readonly 'zahlungsrichtlinien.verwalten': "Zahlungsrichtlinien einstellen (Vier-Augen-Prinzip, Grenzen, Stufen, Berechtigte, Bankdatenbestätigung)";
+    readonly 'bankdaten.bestaetigen': "Geänderte Bankverbindungen von Lieferanten bestätigen oder verwerfen (Vier-Augen-Prinzip)";
     readonly 'wartung.lesen': "Wartungsverträge und Wartungstermine anzeigen";
     readonly 'wartung.schreiben': "Wartungsverträge pflegen, Wartungstermine einplanen und wiederkehrende Rechnungen erzeugen";
     readonly 'nachkalkulation.lesen': "Nachkalkulation (Soll/Ist) je Auftrag und Projekt anzeigen (Werte nur im Rahmen der Preisrechte)";

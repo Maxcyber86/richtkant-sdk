@@ -1,10 +1,10 @@
 # Öffentliche API (Instanz-API /api/v1)
 
-Richtkant ERP 0.16.9 · Modulvertrag 2.2.0 · Stand 2026-11-10
+Richtkant ERP 0.16.10 · Modulvertrag 2.2.0 · Stand 2026-11-10
 Verantwortlich: Christian Heitzer, www.heitzer.info
 
 Die maschinenlesbare Beschreibung aller über einen API-Zugang erreichbaren Endpunkte liegt in
-[openapi/openapi.json](../openapi/openapi.json) (OpenAPI 3, erzeugt aus Richtkant Core 0.16.9 ohne Module; Endpunkte, die über
+[openapi/openapi.json](../openapi/openapi.json) (OpenAPI 3, erzeugt aus Richtkant Core 0.16.10 ohne Module; Endpunkte, die über
 die API immer gesperrt sind, sind dort nicht enthalten). Jede Instanz liefert ihre eigene, vollständige Beschreibung unter
 `GET /api/v1/openapi.json`, einschließlich der Endpunkte ihrer installierten Module.
 
@@ -49,7 +49,8 @@ Unabhängig von den Rollen (Antwort `403`, Code `API_GESPERRT`): Anmeldung und S
 (`KI_SPERRLISTE` in `@gm/core`): Sicherheit und zweiter Faktor, Benutzer und Rollen (ändern), Anbindung an die Verwaltung des Herstellers,
 Lizenz und Fernzugriff, Wartung, Datensicherung und Wiederherstellung, Module, KI-Einstellungen und KI-Funktionen (auch die
 KI-Zuordnung von Ausschreibungen `/gaeb/vorgaenge/:id/ki-*`), Datenschutz
-(Löschläufe, Anonymisierung), Demodaten, Zugangsdaten von Schnittstellen, Portalzugänge. Ein Fremdsystem verwaltet die Instanz nicht.
+(Löschläufe, Anonymisierung), Demodaten, Zugangsdaten von Schnittstellen, Portalzugänge, ab 0.16.10 Zahlungsfreigaben
+(Freigeben, Zahlungsrichtlinien, Bestätigen von Bankverbindungen; Lesen bleibt möglich). Ein Fremdsystem verwaltet die Instanz nicht.
 
 Schritte, die eine Person persönlich bestätigen muss (Kennwort, zweiter Faktor, frische Microsoft-Anmeldung, Zustimmung zur
 Übertragung an eine KI), sind über einen API-Zugang nie möglich.

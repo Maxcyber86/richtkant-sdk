@@ -59,6 +59,7 @@ export declare function createDmsDocument(db: DB, store: FileStore, input: NewDm
     createdAt: Date;
     updatedAt: Date;
     isTest: boolean;
+    geloeschtAm: Date | null;
     createdBy: string | null;
     erechnungPruefung: import("../db/schema.js").ErechnungPruefungKurz | null;
     mitarbeiterSichtbar: boolean;
@@ -66,6 +67,5 @@ export declare function createDmsDocument(db: DB, store: FileStore, input: NewDm
     aktuelleVersion: number;
     archiviertAm: Date | null;
     aufbewahrungBis: string | null;
-    geloeschtAm: Date | null;
     erechnung: Record<string, unknown> | null;
 }>;

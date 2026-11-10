@@ -29,7 +29,7 @@ export const BEISPIEL_MANIFEST: ModulManifest = {
   name: 'Beispielmodul Prüfpunkte',
   version: '1.0.0',
   vertrag: '^2.2.0',
-  core: '>=0.16.9 <0.17.0',
+  core: '>=0.16.10 <0.17.0',
   herausgeber: 'partner',
   lizenz: { spdx: 'Apache-2.0', hinweise: 'Beispielmodul des Richtkant Modul-SDK. Keine eigenen Fremdabhängigkeiten.' },
   beschreibung: 'Wiederkehrende Prüfpunkte mit Fälligkeit (Beispiel für Modulentwickler).',

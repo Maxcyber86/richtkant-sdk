@@ -1,5 +1,5 @@
 import type { FastifyRequest } from 'fastify';
-import type { DB } from '../db/client.js';
+import type { DbOrTx } from '../db/client.js';
 export interface AuditEntry {
     aktion: string;
     entitaet?: string;
@@ -25,7 +25,7 @@ export interface AuditEntry {
  *   abgebrochen; ein verschluckter Fehler endete in einem stillen Zurückrollen mit Erfolgsmeldung. Der Eintrag ist hier Teil
  *   der fachlichen Transaktion: lieber eine Fehlermeldung als ein stiller Datenverlust.
  */
-export declare function audit(db: DB, req: FastifyRequest | null, entry: AuditEntry, actor?: {
+export declare function audit(db: DbOrTx, req: FastifyRequest | null, entry: AuditEntry, actor?: {
     id: string | null;
     benutzername: string;
 }): Promise<void>;

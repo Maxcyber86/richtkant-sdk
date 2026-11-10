@@ -227,6 +227,7 @@ export declare const HILFE: {
     readonly "administration.import.fortschritt": HilfeThema;
     readonly "administration.import.entfernen": HilfeThema;
     readonly "administration.import.zuordnung": HilfeThema;
+    readonly "administration.import.umwandlungsregeln": HilfeThema;
     readonly "administration.import.offene_posten": HilfeThema;
     readonly "administration.import.rueckgaengig": HilfeThema;
     readonly "administration.import.aufbewahrung": HilfeThema;
@@ -252,6 +253,7 @@ export declare const HILFE: {
     readonly "administration.kundenportal": HilfeThema;
     readonly "administration.kundenportal.pflichtangaben": HilfeThema;
     readonly "administration.kundenportal.online_annahme": HilfeThema;
+    readonly "administration.kundenportal.verbraucher": HilfeThema;
     readonly "allgemein.konto.sicherheit": HilfeThema;
     readonly "administration.sicherheit": HilfeThema;
     readonly "administration.sicherheit.passkeys": HilfeThema;
@@ -259,6 +261,7 @@ export declare const HILFE: {
     readonly "administration.sicherheit.nur_lesen": HilfeThema;
     readonly "administration.sicherheit.zuruecksetzen": HilfeThema;
     readonly "finanzen.buchhaltung.freigaben": HilfeThema;
+    readonly "finanzen.zahlungsfreigaben": HilfeThema;
     readonly "projekte.wartung": HilfeThema;
     readonly "projekte.wartung.termine": HilfeThema;
     readonly "projekte.wartung.einstellungen": HilfeThema;
@@ -327,6 +330,7 @@ export declare const HILFE: {
     readonly "administration.benutzer": HilfeThema;
     readonly "administration.benutzer.anmeldeart": HilfeThema;
     readonly "administration.benutzer.zugang": HilfeThema;
+    readonly "administration.benutzer.loeschen": HilfeThema;
     readonly "administration.benutzer.rollenvergabe": HilfeThema;
     readonly "administration.rollen": HilfeThema;
     readonly "administration.firma": HilfeThema;
