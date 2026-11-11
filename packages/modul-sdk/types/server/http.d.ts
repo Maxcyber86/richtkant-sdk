@@ -60,5 +60,5 @@ export declare const paginationQuery: {
     limit: (v: unknown) => number;
     offset: (v: unknown) => number;
 };
-/** Escaping für ILIKE-Suchmuster */
+/** Escaping für ILIKE-Suchmuster (Suche „enthält“; gemeinsamer Baustein lib/like.ts) */
 export declare function likePattern(q: string): string;

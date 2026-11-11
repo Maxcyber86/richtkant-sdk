@@ -1,6 +1,6 @@
 # Module für Richtkant ERP
 
-Richtkant ERP 0.16.10 · Modulvertrag 2.2.0 · Stand 2026-11-10
+Richtkant ERP 0.16.11 · Modulvertrag 2.2.0 · Stand 2026-11-11
 Verantwortlich: Christian Heitzer, www.heitzer.info
 
 Entwicklerdokumentation für installierbare Module (Branchenmodule). „Richtkant Core“ ist das branchenneutrale Basis-ERP und

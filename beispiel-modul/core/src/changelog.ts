@@ -4,9 +4,9 @@ import type { ModulChangelogEintrag } from '@gm/core';
 export const BEISPIEL_CHANGELOG: readonly ModulChangelogEintrag[] = [
   {
     version: '1.0.0',
-    datum: '2026-11-10',
+    datum: '2026-11-11',
     titel: 'Erste Fassung',
-    benoetigtCore: '>=0.16.10 <0.17.0',
+    benoetigtCore: '>=0.16.11 <0.17.0',
     neu: ['Prüfpunkte mit Prüfintervall anlegen, Fälligkeit sehen und als geprüft markieren.'],
     verbessert: [],
     behoben: [],

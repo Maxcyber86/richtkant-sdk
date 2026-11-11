@@ -1,10 +1,10 @@
 # Öffentliche API (Instanz-API /api/v1)
 
-Richtkant ERP 0.16.10 · Modulvertrag 2.2.0 · Stand 2026-11-10
+Richtkant ERP 0.16.11 · Modulvertrag 2.2.0 · Stand 2026-11-11
 Verantwortlich: Christian Heitzer, www.heitzer.info
 
 Die maschinenlesbare Beschreibung aller über einen API-Zugang erreichbaren Endpunkte liegt in
-[openapi/openapi.json](../openapi/openapi.json) (OpenAPI 3, erzeugt aus Richtkant Core 0.16.10 ohne Module; Endpunkte, die über
+[openapi/openapi.json](../openapi/openapi.json) (OpenAPI 3, erzeugt aus Richtkant Core 0.16.11 ohne Module; Endpunkte, die über
 die API immer gesperrt sind, sind dort nicht enthalten). Jede Instanz liefert ihre eigene, vollständige Beschreibung unter
 `GET /api/v1/openapi.json`, einschließlich der Endpunkte ihrer installierten Module.
 
@@ -62,6 +62,10 @@ Schritte, die eine Person persönlich bestätigen muss (Kennwort, zweiter Faktor
   `API_ZUGANG_GESPERRT` (401), `API_ZUGANG_ABGELAUFEN` (401), `API_IP_NICHT_ERLAUBT` (403), `API_NUR_LESEN` (403),
   `API_GESPERRT` (403), `API_NICHT_LIZENZIERT` (403), `429` bei Überschreiten der Grenze.
 - Schreibende Aufrufe mit Versionsfeld (z. B. Belege) verlangen die aktuelle `version`; sonst `409`.
+- Fachliche Codes (Auswahl, ab 0.16.11): `CURSOR_UNGUELTIG` (400, ungültige Fortsetzung einer Liste, Abschnitt 5c),
+  `IMPORT_WEITERVERWENDET` (409, Rückgängig eines Imports, wenn ein zugehöriger Datensatz danach geändert oder weiterverwendet
+  wurde), `UNGUELTIG` (400, z. B. dieselbe Position zweimal in einer Rechnungskorrektur). Die Codes `HERKUNFT_UNBEKANNT`,
+  `KONTO_GELOESCHT`, `KONTO_GEAENDERT` (409) und `GESPERRT` (423) gehören zu Routen, die über die API gesperrt sind (Abschnitt 2).
 
 ## 4. Beschreibung der Endpunkte
 
@@ -124,6 +128,32 @@ Beim Ändern bzw. Anlegen (`PUT /api/v1/bestellungen/{id}/positionen`, `POST /ap
 Preisanfragen (`/api/v1/einkauf/preisanfragen`) nehmen je Artikelposition optional `einheitId` an; Menge und Angebotspreise gelten
 dann je dieser Einheit. Exporte in offenen Formaten: `GET /api/v1/einkauf/preisanfragen/export?format=csv|json` und
 `GET /api/v1/articles/einheiten/export?format=csv|json` (jeweils `demo=true` mit Demodaten).
+
+### 5c. Listen (ab 0.16.11)
+
+Listen mit Anzeigegrenze kürzen nie still. Gemeinsamer Listenvertrag:
+
+| Feld | Bedeutung |
+|---|---|
+| `items` | Einträge dieser Seite |
+| `weitere` | `true`, wenn hinter dieser Seite weitere Einträge folgen (immer vorhanden) |
+| `gesamt` | Gesamtzahl der Treffer, wo die Zählung bezahlbar ist (sonst nicht enthalten) |
+| `cursor` | Fortsetzung für die nächste Seite (nur bei `weitere: true`); als `?cursor=` unverändert zurücksenden |
+
+- Der Cursor ist ein undurchsichtiger Schlüssel über die Sortierwerte (letzte Stufe die ID); Einträge werden auch bei
+  gleichzeitigen Änderungen weder doppelt noch ausgelassen. Er gehört zu genau einer Liste, ist mit dem Schlüssel der Instanz
+  geschützt (Prüfsumme) und gilt nur in dieser Instanz und bis zu einem Wechsel ihres Schlüssels. Ein veränderter, fremder
+  (andere Liste bzw. Instanz) oder unlesbarer Cursor ergibt `400 CURSOR_UNGUELTIG`, nie einen Serverfehler; dann die Liste ohne
+  `cursor` neu laden.
+- Listen dürfen `gesamt` auf Folgeseiten auslassen; `GET /api/v1/kontakte/loeschvorschlaege` liefert es nur auf der ersten Seite (ohne `cursor`).
+- Die Seitengröße wählt `proSeite` (Grenze je Liste, höchstens 500). Vollständige Abrufe folgen `cursor`, bis `weitere` `false` ist.
+- Ältere Listen mit Array-Antwort bleiben unverändert; mit `format=seite` antworten sie im Listenvertrag (z. B.
+  `GET /api/v1/zahlungsverkehr/ueberweisungen/kandidaten?format=seite`).
+- **Verhaltensänderung 0.16.11:** `GET /api/v1/kontakte/loeschvorschlaege` liefert Seiten im Listenvertrag (Standard 200 je Seite,
+  älteste zuerst); bis 0.16.10 kamen alle fälligen der ersten 500 Interessenten ohne Seiten.
+- Weitere Listen mit `weitere`/`gesamt` ab 0.16.11: `GET /api/v1/documents/einbehalte`, `GET /api/v1/mahnwesen/nebenposten` (Summen
+  über alle Treffer), `GET /api/v1/wiedervorlagen` (`weitere`), `GET /api/v1/betriebsmittel/{id}/verlauf` (`cursor`).
+  `GET /api/v1/articles?lieferantId=` filtert serverseitig nach Lieferant.
 
 ## 6. Protokoll und Datenschutz
 

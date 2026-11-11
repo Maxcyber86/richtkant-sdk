@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Richtkant ERP API",
-    "version": "0.16.10",
+    "version": "0.16.11",
     "description": "Öffentliche API: Anmeldung mit `Authorization: Bearer rkapi_…` (API-Zugang unter Administration › Schnittstellen › API-Zugänge). Beträge in Cent."
   },
   "components": {
@@ -2735,6 +2735,16 @@
             },
             "in": "query",
             "name": "warengruppeId",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "query",
+            "name": "lieferantId",
             "required": false
           },
           {
@@ -11734,6 +11744,15 @@
             },
             "in": "query",
             "name": "vor",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 400
+            },
+            "in": "query",
+            "name": "cursor",
             "required": false
           },
           {
@@ -29033,6 +29052,26 @@
           "Datenschutz"
         ],
         "parameters": [
+          {
+            "schema": {
+              "default": 200,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500
+            },
+            "in": "query",
+            "name": "proSeite",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 400
+            },
+            "in": "query",
+            "name": "cursor",
+            "required": false
+          },
           {
             "schema": {
               "type": "string",
@@ -54450,6 +54489,20 @@
         "tags": [
           "Buchhaltung & Zahlungsverkehr"
         ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          }
+        ],
         "responses": {
           "200": {
             "description": "Default Response"
@@ -54462,6 +54515,20 @@
       "get": {
         "tags": [
           "Buchhaltung & Zahlungsverkehr"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          }
         ],
         "responses": {
           "200": {

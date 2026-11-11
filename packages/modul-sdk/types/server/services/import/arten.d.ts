@@ -1,6 +1,7 @@
 import { type ImportArt, type ImportOptionen } from '../../../core/stammdaten12.js';
 import { type Permission } from '../../../core/permissions.js';
 import type { DbOrTx } from '../../db/client.js';
+import type { ImportZiel } from './ruecknahme.js';
 export interface Meldung {
     feld?: string;
     text: string;
@@ -42,6 +43,12 @@ export interface Ergebnis {
     aktion: 'angelegt' | 'geaendert';
     vorher: Record<string, unknown> | null;
     bezeichnung: string;
+    /**
+     * 0.16.11 (Rücknahme ohne Datenverlust): weitere Datensätze, die die Zeile als Nebenwirkung angelegt oder geändert hat und
+     * die `zuruecknehmen` zurücksetzt (z. B. Ansprechpartner, Maschine). Die Pipeline hält für jedes berührte Ziel den
+     * Nachher-Stand fest und nimmt den Import nur zurück, solange keines davon inzwischen geändert wurde.
+     */
+    beruehrt?: ImportZiel[];
 }
 export interface ImportArtAdapter {
     zielTabelle: string;
@@ -55,7 +62,10 @@ export interface ImportArtAdapter {
     }[], k: ImportKontext) => Promise<GepruefteZeile[]>;
     anlegen: (tx: DbOrTx, z: GepruefteZeile, k: ImportKontext) => Promise<Ergebnis>;
     aktualisieren: (tx: DbOrTx, z: GepruefteZeile, k: ImportKontext) => Promise<Ergebnis>;
-    /** Angelegten Datensatz entfernen bzw. Vorher-Stand wiederherstellen */
+    /**
+     * Angelegten Datensatz entfernen bzw. Vorher-Stand wiederherstellen. Jede Tabelle, die `anlegen`/`aktualisieren` schreibt
+     * und die hier zurückgesetzt wird, gehört als Ziel (`zielTabelle` bzw. `beruehrt`) ins Ergebnis (Konfliktprüfung).
+     */
     zuruecknehmen: (tx: DbOrTx, r: {
         zielId: string;
         aktion: string;

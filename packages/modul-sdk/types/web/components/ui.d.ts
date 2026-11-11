@@ -1,5 +1,6 @@
 import { type ButtonHTMLAttributes, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes } from 'react';
 import { type AnyFunktionKey } from '../../core/navigation.js';
+import { type AbfrageLage } from '../lib/ladestand';
 export declare function cx(...parts: (string | false | null | undefined)[]): string;
 type Variant = 'primary' | 'secondary' | 'ghost' | 'danger';
 export declare function buttonClass(variant?: Variant, size?: 'sm' | 'md', extra?: string): string;
@@ -136,13 +137,7 @@ export declare function Spinner({ label }: {
  * Nur einsetzen, solange keine Daten vorliegen: sonst stünde der Ladehinweis dauerhaft neben den Daten.
  */
 export declare function AbfrageZustand({ abfrage, leer, nichtGefunden, }: {
-    abfrage: {
-        isError: boolean;
-        error: unknown;
-        isFetching: boolean;
-        fetchStatus?: string;
-        refetch?: () => unknown;
-    };
+    abfrage: AbfrageLage;
     leer?: ReactNode;
     /** Meldung, wenn der Datensatz nicht (mehr) vorhanden ist (nur bei Status 404; andere Fehler als Ladefehler) */
     nichtGefunden?: ReactNode;
@@ -175,21 +170,31 @@ export declare function DetailHeader({ back, title, badges, sub, actions }: {
     sub?: ReactNode;
     actions?: ReactNode;
 }): import("react").JSX.Element;
-export declare function EmptyState({ title, children, action }: {
+export declare function EmptyState({ title, children, action, abfrage }: {
     title: string;
     children?: ReactNode;
     action?: ReactNode;
+    abfrage?: AbfrageLage;
 }): import("react").JSX.Element | null;
 /**
  * Leerhinweis innerhalb einer Liste oder Kachel (z. B. „Keine offenen Anträge.“): nur nach erfolgreicher, leerer Antwort.
  * Fehlen die Daten der Seite wegen eines Ladefehlers, bleibt er aus; den Hinweis zeigt die Seitenhülle (0.12.2 UX-02).
  */
-export declare function Leerhinweis({ children }: {
+export declare function Leerhinweis({ children, abfrage }: {
     children: ReactNode;
+    abfrage?: AbfrageLage;
 }): import("react").JSX.Element | null;
 export declare function Notice({ tone, children, title }: {
     tone: 'info' | 'warn' | 'err' | 'ok';
     title?: string;
+    children: ReactNode;
+}): import("react").JSX.Element;
+/**
+ * Gültigkeit für Formulare außerhalb von Dialogen: Ungültige Zahlenfelder halten jede Hauptaktion (`primary`, z. B.
+ * „Speichern“) bzw. jeden Absendeknopf im Bereich an. Die Anwendung schließt jede Seite darin ein (AppShell); Dialoge bilden
+ * darin einen eigenen Bereich.
+ */
+export declare function FormularGueltigkeitsBereich({ children }: {
     children: ReactNode;
 }): import("react").JSX.Element;
 /**
