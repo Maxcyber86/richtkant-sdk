@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Richtkant ERP API",
-    "version": "0.16.11",
+    "version": "0.16.12",
     "description": "Öffentliche API: Anmeldung mit `Authorization: Bearer rkapi_…` (API-Zugang unter Administration › Schnittstellen › API-Zugänge). Beträge in Cent."
   },
   "components": {
@@ -1185,13 +1185,17 @@
                     "items": {
                       "type": "object",
                       "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
                         "titel": {
                           "type": "string",
                           "minLength": 1,
                           "maxLength": 200
                         },
                         "beschreibung": {
-                          "default": null,
                           "nullable": true,
                           "type": "string",
                           "maxLength": 2000
@@ -1204,7 +1208,6 @@
                           "maximum": 100000
                         },
                         "maschineId": {
-                          "default": null,
                           "nullable": true,
                           "type": "string",
                           "format": "uuid",
@@ -1740,13 +1743,17 @@
                     "items": {
                       "type": "object",
                       "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
                         "titel": {
                           "type": "string",
                           "minLength": 1,
                           "maxLength": 200
                         },
                         "beschreibung": {
-                          "default": null,
                           "nullable": true,
                           "type": "string",
                           "maxLength": 2000
@@ -1759,7 +1766,6 @@
                           "maximum": 100000
                         },
                         "maschineId": {
-                          "default": null,
                           "nullable": true,
                           "type": "string",
                           "format": "uuid",
@@ -2785,6 +2791,37 @@
             },
             "in": "query",
             "name": "offset",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200
+            },
+            "in": "query",
+            "name": "proSeite",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 400
+            },
+            "in": "query",
+            "name": "cursor",
             "required": false
           }
         ],
@@ -5833,6 +5870,20 @@
         "tags": [
           "Auswertungen"
         ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "voll",
+                "start"
+              ]
+            },
+            "in": "query",
+            "name": "umfang",
+            "required": false
+          }
+        ],
         "responses": {
           "200": {
             "description": "Default Response"
@@ -6821,6 +6872,37 @@
             },
             "in": "query",
             "name": "q",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500
+            },
+            "in": "query",
+            "name": "proSeite",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 400
+            },
+            "in": "query",
+            "name": "cursor",
             "required": false
           }
         ],
@@ -13195,6 +13277,37 @@
             "in": "query",
             "name": "richtung",
             "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200
+            },
+            "in": "query",
+            "name": "proSeite",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 400
+            },
+            "in": "query",
+            "name": "cursor",
+            "required": false
           }
         ],
         "responses": {
@@ -16339,6 +16452,37 @@
             },
             "in": "query",
             "name": "kundeId",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500
+            },
+            "in": "query",
+            "name": "proSeite",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 400
+            },
+            "in": "query",
+            "name": "cursor",
             "required": false
           }
         ],
@@ -19569,6 +19713,37 @@
             "in": "query",
             "name": "zahlung",
             "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500
+            },
+            "in": "query",
+            "name": "proSeite",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 400
+            },
+            "in": "query",
+            "name": "cursor",
+            "required": false
           }
         ],
         "responses": {
@@ -20357,6 +20532,39 @@
       "get": {
         "tags": [
           "Einkauf"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 100
+            },
+            "in": "query",
+            "name": "q",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            },
+            "in": "query",
+            "name": "ohneDienstleistung",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200
+            },
+            "in": "query",
+            "name": "limit",
+            "required": false
+          }
         ],
         "responses": {
           "200": {
@@ -29787,6 +29995,37 @@
             "in": "query",
             "name": "alle",
             "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500
+            },
+            "in": "query",
+            "name": "proSeite",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 400
+            },
+            "in": "query",
+            "name": "cursor",
+            "required": false
           }
         ],
         "responses": {
@@ -29919,6 +30158,37 @@
             },
             "in": "query",
             "name": "alle",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500
+            },
+            "in": "query",
+            "name": "proSeite",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 400
+            },
+            "in": "query",
+            "name": "cursor",
             "required": false
           }
         ],
@@ -31859,6 +32129,18 @@
             "in": "query",
             "name": "mitarbeiterId",
             "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
           }
         ],
         "responses": {
@@ -32362,6 +32644,18 @@
             },
             "in": "query",
             "name": "status",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
             "required": false
           }
         ],
@@ -34082,6 +34376,18 @@
           {
             "schema": {
               "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
               "format": "uuid",
               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
             },
@@ -34274,6 +34580,18 @@
           "Nachkalkulation"
         ],
         "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          },
           {
             "schema": {
               "type": "string",
@@ -35181,6 +35499,18 @@
             },
             "in": "query",
             "name": "status",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
             "required": false
           }
         ],
@@ -38284,6 +38614,20 @@
         "tags": [
           "Postfach"
         ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          }
+        ],
         "responses": {
           "200": {
             "description": "Default Response"
@@ -39390,6 +39734,37 @@
             },
             "in": "query",
             "name": "kundeId",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500
+            },
+            "in": "query",
+            "name": "proSeite",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 400
+            },
+            "in": "query",
+            "name": "cursor",
             "required": false
           }
         ],
@@ -40656,6 +41031,37 @@
             },
             "in": "query",
             "name": "q",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500
+            },
+            "in": "query",
+            "name": "proSeite",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 400
+            },
+            "in": "query",
+            "name": "cursor",
             "required": false
           }
         ],
@@ -42569,6 +42975,18 @@
             },
             "in": "query",
             "name": "belegId",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
             "required": false
           }
         ],
@@ -46657,6 +47075,37 @@
             "in": "query",
             "name": "q",
             "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500
+            },
+            "in": "query",
+            "name": "proSeite",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 400
+            },
+            "in": "query",
+            "name": "cursor",
+            "required": false
           }
         ],
         "responses": {
@@ -47519,6 +47968,18 @@
           "Einkauf"
         ],
         "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          },
           {
             "schema": {
               "type": "string",
@@ -48955,6 +49416,18 @@
             "in": "query",
             "name": "q",
             "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
           }
         ],
         "responses": {
@@ -49080,6 +49553,18 @@
             },
             "in": "query",
             "name": "kundeId",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
             "required": false
           }
         ],
@@ -49253,6 +49738,18 @@
             },
             "in": "query",
             "name": "q",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
             "required": false
           }
         ],
@@ -53982,6 +54479,20 @@
         "tags": [
           "Buchhaltung & Zahlungsverkehr"
         ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          }
+        ],
         "responses": {
           "200": {
             "description": "Default Response"
@@ -53994,6 +54505,20 @@
       "get": {
         "tags": [
           "Buchhaltung & Zahlungsverkehr"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          }
         ],
         "responses": {
           "200": {
@@ -54116,6 +54641,18 @@
             },
             "in": "query",
             "name": "kundeId",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
             "required": false
           }
         ],
@@ -54754,6 +55291,18 @@
             "in": "query",
             "name": "status",
             "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
           }
         ],
         "responses": {
@@ -55034,6 +55583,18 @@
             },
             "in": "query",
             "name": "status",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
             "required": false
           }
         ],

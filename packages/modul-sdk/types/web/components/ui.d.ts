@@ -152,12 +152,13 @@ export declare function AbfrageFehler({ fehler, erneut, titel }: {
  * Seitenkopf. Seiten einer Funktion übergeben `funktion`; der Titel kommt dann aus dem
  * Anwendungsverzeichnis und stimmt immer mit Menü, Favoriten und Verweisen überein.
  */
-export declare function PageHeader({ title, funktion, description, actions, hilfe }: {
+export declare function PageHeader({ title, funktion, description, actions, hilfe, kompaktMobil }: {
     title?: string;
     funktion?: AnyFunktionKey;
     description?: ReactNode;
     actions?: ReactNode;
     hilfe?: boolean;
+    kompaktMobil?: boolean;
 }): import("react").JSX.Element;
 /** Kopf einer Detailseite mit Rückweg zur Liste, Kennzeichen, Kurzangaben und Aktionen */
 export declare function DetailHeader({ back, title, badges, sub, actions }: {
@@ -175,6 +176,7 @@ export declare function EmptyState({ title, children, action, abfrage }: {
     children?: ReactNode;
     action?: ReactNode;
     abfrage?: AbfrageLage;
+    ohneAbfrage?: true;
 }): import("react").JSX.Element | null;
 /**
  * Leerhinweis innerhalb einer Liste oder Kachel (z. B. „Keine offenen Anträge.“): nur nach erfolgreicher, leerer Antwort.

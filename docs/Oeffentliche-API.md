@@ -1,10 +1,10 @@
 # Öffentliche API (Instanz-API /api/v1)
 
-Richtkant ERP 0.16.11 · Modulvertrag 2.2.0 · Stand 2026-11-11
+Richtkant ERP 0.16.12 · Modulvertrag 2.2.0 · Stand 2026-11-12
 Verantwortlich: Christian Heitzer, www.heitzer.info
 
 Die maschinenlesbare Beschreibung aller über einen API-Zugang erreichbaren Endpunkte liegt in
-[openapi/openapi.json](../openapi/openapi.json) (OpenAPI 3, erzeugt aus Richtkant Core 0.16.11 ohne Module; Endpunkte, die über
+[openapi/openapi.json](../openapi/openapi.json) (OpenAPI 3, erzeugt aus Richtkant Core 0.16.12 ohne Module; Endpunkte, die über
 die API immer gesperrt sind, sind dort nicht enthalten). Jede Instanz liefert ihre eigene, vollständige Beschreibung unter
 `GET /api/v1/openapi.json`, einschließlich der Endpunkte ihrer installierten Module.
 
@@ -66,6 +66,10 @@ Schritte, die eine Person persönlich bestätigen muss (Kennwort, zweiter Faktor
   `IMPORT_WEITERVERWENDET` (409, Rückgängig eines Imports, wenn ein zugehöriger Datensatz danach geändert oder weiterverwendet
   wurde), `UNGUELTIG` (400, z. B. dieselbe Position zweimal in einer Rechnungskorrektur). Die Codes `HERKUNFT_UNBEKANNT`,
   `KONTO_GELOESCHT`, `KONTO_GEAENDERT` (409) und `GESPERRT` (423) gehören zu Routen, die über die API gesperrt sind (Abschnitt 2).
+- Ab 0.16.12: `WISSEN_NACHWEISE_VORHANDEN` (409, `DELETE /api/v1/wissen/artikel/{id}`, wenn Lesebestätigungen, Pflichtzuweisungen
+  oder Rückfragen bestehen – Artikel archivieren statt löschen). Gleichzeitige Bearbeitung ergibt bei Abwesenheiten, Feedback, Prüfterminen, Eingangsrechnungs-Entscheidung und
+  GAEB-Zuordnung `409` (`KONFLIKT` bzw. `BELEG_GEAENDERT`). `PUT /api/v1/teams/{id}` und Arbeitsschritte in
+  `POST/PUT /api/v1/arbeitsauftraege`: fehlende optionale Felder lassen den gespeicherten Wert unverändert (bisher gelöscht).
 
 ## 4. Beschreibung der Endpunkte
 
@@ -154,6 +158,27 @@ Listen mit Anzeigegrenze kürzen nie still. Gemeinsamer Listenvertrag:
 - Weitere Listen mit `weitere`/`gesamt` ab 0.16.11: `GET /api/v1/documents/einbehalte`, `GET /api/v1/mahnwesen/nebenposten` (Summen
   über alle Treffer), `GET /api/v1/wiedervorlagen` (`weitere`), `GET /api/v1/betriebsmittel/{id}/verlauf` (`cursor`).
   `GET /api/v1/articles?lieferantId=` filtert serverseitig nach Lieferant.
+- **Ab 0.16.12** antworten mit `format=seite` zusätzlich im Listenvertrag mit `cursor` (Seitengröße `proSeite`,
+  `gesamt` auf der ersten Seite); ohne `format` bleibt die Antwort unverändert:
+  `GET /api/v1/articles` (Standard 50, höchstens 200; bisher wirkten `format`/`proSeite` hier nicht), `GET /api/v1/customers`
+  (Standard 50, höchstens 200; alle Sortierungen über `sort`/`richtung`), `GET /api/v1/suppliers`, `GET /api/v1/projekte`,
+  `GET /api/v1/bestellungen`, `GET /api/v1/documents`, `GET /api/v1/reklamationen`, `GET /api/v1/eingangsrechnungen`
+  (jeweils Standard 100, höchstens 500) und `GET /api/v1/lager/bestellvorschlag` (zusätzlich `vorschlaege` = Zahl der
+  Artikel mit Vorschlag auf der ersten Seite).
+- Ältere Listen mit fester Grenze melden mit `format=seite` (ohne Cursor) `weitere`, wenn hinter der Grenze weitere Einträge
+  folgen, z. B. `GET /api/v1/suppliers/{id}/bestellungen`, `/mahnwesen/laeufe`, `/wartung/vertraege`, `/wartung/termine`,
+  `/wareneingang/bestellungen`, `/zahlungsverkehr/lastschriften/kandidaten`, `/zahlungsverkehr/lastschriften/eingereicht`,
+  `/zahlungsverkehr/mandate`, `/zeiten/korrekturen`, `/shopfloor/auftraege`.
+- `GET /api/v1/einkauf/artikel` nimmt `q` (Nummer oder Bezeichnung enthält), `ohneDienstleistung=true` und `limit` (1–200) an;
+  ohne Parameter wie bisher alle aktiven Artikel.
+- `GET /api/v1/lager` (Lagerbestand, ab 0.16.12) mit `format=seite`, `proSeite` (1–500, Standard 100) und `cursor`: Seiten nach
+  Artikelnummer, Suche `q` und Filter `alle` in SQL vor der Grenze; auf der ersten Seite `gesamt` und `mitBestand` (Artikel mit
+  Gesamtbestand > 0 über alle Artikel, unabhängig von `q` und `alle`). Felder je Eintrag wie in der Altantwort (Array aller Treffer).
+- **Kleine Antwortmodelle (ab 0.16.12):** `GET /api/v1/auswertungen/katalog?umfang=start` liefert nur `{ startDashboard, heute }`,
+  `GET /api/v1/system/demodaten?umfang=start` nur `{ summe, demoZugaenge }`; ohne `umfang` unverändert.
+- **Verhaltensänderung 0.16.12:** `GET /api/v1/vertrieb/pipeline` liefert je Spalte höchstens 50 Karten (bisher 200); `anzahl`,
+  `summeCent` und `gewichtetCent` zählen weiter alle Einträge. `GET /api/v1/system/lizenzen` und `GET /api/v1/hilfe/schnittstellen`
+  senden einen `ETag`; mit `If-None-Match` und unverändertem Stand antworten sie `304` ohne Rumpf.
 
 ## 6. Protokoll und Datenschutz
 

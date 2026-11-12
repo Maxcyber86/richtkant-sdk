@@ -7,7 +7,7 @@ export const BEISPIEL_HILFE_INHALTE = themen({
     art: 'funktion',
     funktion: 'betriebsmittel.pruefpunkte',
     eltern: 'modul.betriebsmittel',
-    stand: '0.16.11',
+    stand: '0.16.12',
     kurz: 'Wiederkehrende Prüfungen (z. B. Sicht- und Funktionsprüfungen) mit Intervall anlegen und ihre Fälligkeit im Blick behalten.',
     anleitung: [
       schritte('Bezeichnung und Prüfintervall in Tagen eingeben und `Anlegen` wählen.', 'Nach der Prüfung in der Zeile `Geprüft` wählen; das Datum ist der heutige Tag.'),

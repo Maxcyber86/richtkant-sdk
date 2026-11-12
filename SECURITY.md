@@ -1,6 +1,6 @@
 # Sicherheitsrichtlinie – Richtkant Modul-SDK
 
-Stand: Richtkant Core 0.16.11, 2026-11-11. Hersteller: Christian Heitzer, www.heitzer.info.
+Stand: Richtkant Core 0.16.12, 2026-11-12. Hersteller: Christian Heitzer, www.heitzer.info.
 
 ## Meldeweg
 

@@ -3,7 +3,7 @@
 Entwickler-Repository für **Richtkant ERP**: Typdeklarationen der Modul-Schnittstelle, Dokumentation des Modulvertrags,
 die Beschreibung der öffentlichen API und ein vollständiges Beispielmodul.
 
-Stand: Richtkant Core **0.16.11** · Modulvertrag **2.2.0** · öffentliche API **/api/v1** · 2026-11-11
+Stand: Richtkant Core **0.16.12** · Modulvertrag **2.2.0** · öffentliche API **/api/v1** · 2026-11-12
 
 ## Was ist Richtkant?
 
@@ -77,7 +77,7 @@ Instanz und [docs/Oeffentliche-API.md](docs/Oeffentliche-API.md).
 ## Kompatibilität und Versionen
 
 - **Modulvertrag** (Semver, derzeit 2.2.0): Ein Modul erklärt in `manifest.vertrag` den benötigten Bereich (z. B.
-  `^2.2.0`) und in `manifest.core` die unterstützten Versionen des Core (z. B. `>=0.16.11 <0.17.0`). Innerhalb einer
+  `^2.2.0`) und in `manifest.core` die unterstützten Versionen des Core (z. B. `>=0.16.12 <0.17.0`). Innerhalb einer
   Hauptversion des Vertrags kommt nur hinzu; Entfallendes wird vorher angekündigt ([Modul-SDK.md](docs/Modul-SDK.md), Abschnitt 2).
 - **Öffentliche API** `/api/v1`: abwärtsverträglich; eine unverträgliche Änderung käme unter `/api/v2` mit mindestens zwölf
   Monaten Parallelbetrieb.
