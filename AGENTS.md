@@ -1,6 +1,6 @@
 # Hinweise für automatisierte Prüfungen und Mitwirkende
 
-Dieses Repository ist das **Richtkant Modul-SDK** (Apache-2.0) für Richtkant Core 0.16.13, Modulvertrag 2.3.0.
+Dieses Repository ist das **Richtkant Modul-SDK** (Apache-2.0) für Richtkant Core 0.16.14, Modulvertrag 2.4.0.
 Es wird bei jedem Release des Core automatisch aus dem Hauptprojekt erzeugt; Änderungen direkt hier werden beim nächsten Release
 überschrieben. Sprache: Deutsch.
 

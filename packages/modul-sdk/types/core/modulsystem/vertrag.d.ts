@@ -3,7 +3,7 @@ import type { FunktionsSchalter } from '../modulverwaltung.js';
 import type { DemoModulDef } from '../demodaten.js';
 import type { ArtikelGrundart, BezugswegVorlageBeitrag, KatalogName, QualifikationsvorlageBeitrag } from './kataloge.js';
 /** Version des Modulvertrags (Semver), die dieser Core erfüllt; Module erklären in `vertrag` den benötigten Bereich */
-export declare const MODUL_VERTRAG_VERSION = "2.3.0";
+export declare const MODUL_VERTRAG_VERSION = "2.4.0";
 /**
  * Hauptversionen des Vertrags, gegen die gebaute Module dieser Core annimmt. Vertrag 2 ist eine Obermenge von 1 (alle
  * Erweiterungspunkte von 1 bestehen unverändert); Module mit Vertrag 1 laufen weiter, gelten aber als veraltet.

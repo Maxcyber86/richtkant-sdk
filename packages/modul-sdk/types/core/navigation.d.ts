@@ -111,7 +111,7 @@ export declare const ERP_MODULE: readonly [{
     readonly permissions: ["lieferanten.lesen", "lieferanten.schreiben", "preise.ek", "bestellungen.lesen", "bestellungen.ausloesen"];
 }, {
     readonly key: "material";
-    readonly name: "Materialwirtschaft";
+    readonly name: "Lager & Material";
     readonly menue: "Lager";
     readonly permissions: ["artikel.lesen", "artikel.schreiben", "lager.lesen", "wareneingang.buchen", "inventur.durchfuehren", "inventur.abschliessen", "etiketten.drucken", "lager.entnehmen"];
 }, {
@@ -538,8 +538,8 @@ export declare const FUNKTIONEN: readonly [{
 }, {
     readonly key: "finanzen.freigaberegeln";
     readonly modul: "finanzen";
-    readonly label: "Freigabe Eingangsrechnungen";
-    readonly titel: "Prüfung und Freigabe von Eingangsrechnungen";
+    readonly label: "Rechnungsprüfung und Freigabe";
+    readonly titel: "Rechnungsprüfung und Freigabe: Eingangsrechnungen und Dreiwegeabgleich";
     readonly ziel: {
         query?: Record<string, string> | undefined;
         route: "admin";
@@ -578,7 +578,7 @@ export declare const FUNKTIONEN: readonly [{
 }, {
     readonly key: "finanzen.mahnstufen";
     readonly modul: "finanzen";
-    readonly label: "Mahnstufen";
+    readonly label: "Mahnwesen";
     readonly titel: "Mahnstufen, Gebühren und Verzugszinsen";
     readonly ziel: {
         query?: Record<string, string> | undefined;
@@ -874,8 +874,9 @@ export declare const FUNKTIONEN: readonly [{
 }, {
     readonly key: "administration.sicherheit";
     readonly modul: "administration";
-    readonly label: "Anmeldung und Sicherheit";
-    readonly titel: "Anmeldung und Sicherheit: Zwei-Faktor, Passkeys";
+    readonly label: "Sicherheit";
+    readonly titel: "Sicherheit: Anmeldung mit Zwei-Faktor und Passkeys";
+    readonly reiterLabel: "Anmeldung";
     readonly ziel: {
         query?: Record<string, string> | undefined;
         route: "admin";
@@ -886,6 +887,22 @@ export declare const FUNKTIONEN: readonly [{
     readonly permissions: ["sicherheit.verwalten"];
     readonly admin: "Zugriff";
     readonly rang: 12;
+}, {
+    readonly key: "administration.virenpruefung";
+    readonly modul: "administration";
+    readonly label: "Virenprüfung";
+    readonly titel: "Virenprüfung der hochgeladenen Dateien";
+    readonly ziel: {
+        query?: Record<string, string> | undefined;
+        route: "admin";
+        params: {
+            bereich: string;
+        };
+    };
+    readonly permissions: ["betrieb.metriken"];
+    readonly admin: "Zugriff";
+    readonly rang: 12.5;
+    readonly reiterVon: "administration.sicherheit";
 }, {
     readonly key: "administration.firma";
     readonly modul: "administration";
@@ -947,7 +964,7 @@ export declare const FUNKTIONEN: readonly [{
     readonly key: "administration.buchhaltung";
     readonly modul: "finanzen";
     readonly label: "Buchhaltung und DATEV";
-    readonly titel: "Buchhaltungsschnittstellen, DATEV und Zahlungsverkehr";
+    readonly titel: "Buchhaltung und DATEV: Schnittstellen und Kontenzuordnung";
     readonly ziel: {
         query?: Record<string, string> | undefined;
         route: "admin";
@@ -976,7 +993,7 @@ export declare const FUNKTIONEN: readonly [{
 }, {
     readonly key: "administration.kundenportal";
     readonly modul: "vertrieb";
-    readonly label: "Kundenportal (Einstellungen)";
+    readonly label: "Kundenportal";
     readonly titel: "Kundenportal: Funktionen, Branding und Datenschutz";
     readonly ziel: {
         query?: Record<string, string> | undefined;
@@ -986,8 +1003,8 @@ export declare const FUNKTIONEN: readonly [{
         };
     };
     readonly permissions: ["portal.verwalten"];
-    readonly admin: "Integration";
-    readonly rang: 33;
+    readonly admin: "Fachbereiche";
+    readonly rang: 51.7;
 }, {
     readonly key: "administration.betrieb";
     readonly modul: "administration";
@@ -1075,6 +1092,21 @@ export declare const FUNKTIONEN: readonly [{
     readonly permissions: ["import.ausfuehren", "ki.import", "dms.verwalten", "betriebsmittel.schreiben"];
     readonly admin: "System";
     readonly rang: 44;
+}, {
+    readonly key: "finanzen.zahlungsverkehr";
+    readonly modul: "finanzen";
+    readonly label: "Zahlungsverkehr";
+    readonly titel: "Zahlungsverkehr: SEPA-Gläubiger-ID, Auftraggeberkonto und Vorlauf";
+    readonly ziel: {
+        query?: Record<string, string> | undefined;
+        route: "admin";
+        params: {
+            bereich: string;
+        };
+    };
+    readonly permissions: ["buchhaltung.schnittstellen_verwalten"];
+    readonly admin: "Fachbereiche";
+    readonly rang: 66.2;
 }, {
     readonly key: "administration.bank";
     readonly modul: "finanzen";
@@ -1232,8 +1264,8 @@ export declare const FUNKTIONEN: readonly [{
     readonly key: "material.einstellungen";
     readonly modul: "material";
     readonly label: "Einstellungen";
-    readonly titel: "Fachbereich Materialwirtschaft";
-    readonly adminLabel: "Materialwirtschaft";
+    readonly titel: "Fachbereich Lager & Material";
+    readonly adminLabel: "Lager & Material";
     readonly ziel: {
         query?: Record<string, string> | undefined;
         route: "admin";
@@ -1282,6 +1314,7 @@ export declare const FUNKTIONEN: readonly [{
     readonly label: "Einstellungen";
     readonly titel: "Fachbereich Finanzen & Buchhaltung";
     readonly adminLabel: "Finanzen";
+    readonly reiterLabel: "Allgemein";
     readonly ziel: {
         query?: Record<string, string> | undefined;
         route: "admin";
@@ -1503,15 +1536,15 @@ export declare const FUNKTIONEN: readonly [{
     readonly label: "Verarbeitungsverzeichnis";
     readonly titel: "Verzeichnis von Verarbeitungstätigkeiten";
     readonly ziel: {
-        query?: Record<string, string> | undefined;
+        query?: {
+            reiter: string;
+        } | undefined;
         route: "admin";
         params: {
             bereich: string;
         };
     };
     readonly permissions: ["datenschutz.verwalten"];
-    readonly admin: "Unternehmen";
-    readonly rang: 21;
 }, {
     readonly key: "administration.versionen";
     readonly modul: "administration";
@@ -1590,8 +1623,8 @@ export declare const FUNKTIONEN: readonly [{
 }, {
     readonly key: "einkauf.katalogabruf";
     readonly modul: "einkauf";
-    readonly label: "Katalogabruf";
-    readonly titel: "Katalogabruf: erlaubte Hosts und Dateigröße";
+    readonly label: "Kataloge und Preisimport";
+    readonly titel: "Kataloge und Preisimport: erlaubte Hosts und Dateigröße für den Katalogabruf";
     readonly ziel: {
         query?: Record<string, string> | undefined;
         route: "admin";
@@ -1679,8 +1712,8 @@ export declare const FUNKTIONEN: readonly [{
 }, {
     readonly key: "administration.datenschutz";
     readonly modul: "administration";
-    readonly label: "Datenschutz";
-    readonly titel: "Datenschutz: Löschfristen";
+    readonly label: "Datenschutz und Aufbewahrung";
+    readonly titel: "Datenschutz und Aufbewahrung: Löschfristen, Fristenübersicht und Verarbeitungsverzeichnis";
     readonly ziel: {
         query?: Record<string, string> | undefined;
         route: "admin";

@@ -1,10 +1,10 @@
 # Öffentliche API (Instanz-API /api/v1)
 
-Richtkant ERP 0.16.13 · Modulvertrag 2.3.0 · Stand 2026-11-12
+Richtkant ERP 0.16.14 · Modulvertrag 2.4.0 · Stand 2026-11-13
 Verantwortlich: Christian Heitzer, www.heitzer.info
 
 Die maschinenlesbare Beschreibung aller über einen API-Zugang erreichbaren Endpunkte liegt in
-[openapi/openapi.json](../openapi/openapi.json) (OpenAPI 3, erzeugt aus Richtkant Core 0.16.13 ohne Module; Endpunkte, die über
+[openapi/openapi.json](../openapi/openapi.json) (OpenAPI 3, erzeugt aus Richtkant Core 0.16.14 ohne Module; Endpunkte, die über
 die API immer gesperrt sind, sind dort nicht enthalten). Jede Instanz liefert ihre eigene, vollständige Beschreibung unter
 `GET /api/v1/openapi.json`, einschließlich der Endpunkte ihrer installierten Module.
 
@@ -179,6 +179,28 @@ Listen mit Anzeigegrenze kürzen nie still. Gemeinsamer Listenvertrag:
 - **Verhaltensänderung 0.16.12:** `GET /api/v1/vertrieb/pipeline` liefert je Spalte höchstens 50 Karten (bisher 200); `anzahl`,
   `summeCent` und `gewichtetCent` zählen weiter alle Einträge. `GET /api/v1/system/lizenzen` und `GET /api/v1/hilfe/schnittstellen`
   senden einen `ETag`; mit `If-None-Match` und unverändertem Stand antworten sie `304` ohne Rumpf.
+
+### 5d. Änderungen 0.16.14
+
+- **Verhaltensänderung (angekündigt im Schnittstellendokument, Regel 12.2a):** `GET`/`PUT /api/v1/eingangsrechnungen-regeln` –
+  `grenzeCent` gilt ab 0.16.14 **einschließlich**: Zwei Freigaben sind ab diesem Bruttobetrag nötig (bis 0.16.13: darüber). Gespeicherte
+  Grenzen hat das Update um 1 Cent erhöht (Verhalten unverändert); `GET` liefert dazu `grenzeAb: true` (setzt der Server, beim `PUT` nicht
+  nötig). Ohne gespeicherte Regel gilt die Vorgabe ab 5.000,00 € (bis 0.16.13: über 5.000,00 €). Wer das bisherige Verhalten per `PUT`
+  setzen will, sendet den Wert um 1 Cent erhöht.
+- **Fehlercodes (zusätzlich):** Ein Bezug auf einen nicht vorhandenen Datensatz beim Anlegen bzw. Ändern antwortet `400 BEZUG_UNBEKANNT`
+  (bisher `409 IN_VERWENDUNG`; beim Löschen verwendeter Datensätze bleibt `409 IN_VERWENDUNG`); eine unbekannte Maschine in den
+  Arbeitsschritten von `POST`/`PUT /api/v1/arbeitsauftraege` `400 MASCHINE_UNBEKANNT`; Löschen eines Auftrags mit Projektzeiten ohne
+  Projekt `409` mit Begründung (bisher `400 VALIDIERUNG`). Die Texte in `details[].meldung` der Eingabeprüfung sind deutsch (Code
+  `VALIDIERUNG` und Feldpfade unverändert).
+- **Positionen eines Belegs:** Mit `positionId` je Position ändert `PUT` die Position an Ort und Stelle (Kennung und Bezüge von
+  Arbeitsaufträgen, Lieferschein-, Bestell- und Einsatzpositionen bleiben); ohne `positionId` wie bisher neu angelegt.
+- **Neue Endpunkte (additiv):** `POST /api/v1/auswertungen/ausfuehren/buendel` (1–40 Kachel-Definitionen in einer Anfrage, Ergebnis bzw.
+  Fehler je Kachel; Rechte je Kachel wie `/auswertungen/ausfuehren`), `GET /api/v1/admin/feldregister` (Beschreibung aller Einstellungen
+  der Bereiche, die der Zugang öffnen darf; ohne Werte der Instanz), `GET /api/v1/datenschutz/fristen` (Lösch- und Aufbewahrungsfristen
+  mit aktuellem Wert), `GET /api/v1/admin/freigaben-uebersicht` (Freigabe- und Vier-Augen-Regeln mit Zustand). Der CSV-Export der
+  Rechte-Matrix (`GET /api/v1/roles/rechte-matrix.csv`) gehört zu Benutzer und Rollen und ist über die API gesperrt (Abschnitt 2).
+- **Protokoll:** Jede Änderung einer Einstellung, auch über die API, erscheint als `einstellungen.geaendert` mit geänderten Feldern
+  und vorher/nachher (Geheimnisse maskiert); bisherige Einzelaktionen bleiben zusätzlich.
 
 ## 6. Protokoll und Datenschutz
 

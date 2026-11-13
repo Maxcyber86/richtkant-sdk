@@ -1,4 +1,4 @@
-import type { DB } from '../db/client.js';
+import type { DbOrTx } from '../db/client.js';
 import { FileStore } from './storage.js';
 export interface NewDmsDocument {
     /** Inhalt im Speicher; alternativ `datei` (0.13.1: Upload als temporäre Datei, nicht im Speicher) */
@@ -36,7 +36,8 @@ export interface NewDmsDocument {
     /** Feste Dokumentnummer (Import) */
     nummer?: string;
 }
-export declare function createDmsDocument(db: DB, store: FileStore, input: NewDmsDocument): Promise<{
+/** 0.16.14: nimmt auch eine laufende Transaktion (die eigene Transaktion wird dann ein Sicherungspunkt) */
+export declare function createDmsDocument(db: DbOrTx, store: FileStore, input: NewDmsDocument): Promise<{
     kundeId: string | null;
     notiz: string | null;
     id: string;

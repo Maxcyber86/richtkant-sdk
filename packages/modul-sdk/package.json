@@ -1,7 +1,7 @@
 {
   "name": "@richtkant/modul-sdk",
-  "version": "0.16.13",
-  "description": "Typdeklarationen der Modul-Schnittstelle von Richtkant ERP 0.16.13 (Modulvertrag 2.3.0)",
+  "version": "0.16.14",
+  "description": "Typdeklarationen der Modul-Schnittstelle von Richtkant ERP 0.16.14 (Modulvertrag 2.4.0)",
   "license": "Apache-2.0",
   "author": "Christian Heitzer (https://www.heitzer.info)",
   "type": "module",
@@ -28,8 +28,8 @@
     "README.md"
   ],
   "richtkant": {
-    "core": "0.16.13",
-    "vertrag": "2.3.0"
+    "core": "0.16.14",
+    "vertrag": "2.4.0"
   },
   "peerDependencies": {
     "@tanstack/react-query": "^5.104.3",

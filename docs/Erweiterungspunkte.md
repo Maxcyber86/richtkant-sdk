@@ -1,6 +1,6 @@
 # Referenz der Erweiterungspunkte
 
-Richtkant ERP 0.16.13 · Modulvertrag 2.3.0 · Stand 2026-11-12
+Richtkant ERP 0.16.14 · Modulvertrag 2.4.0 · Stand 2026-11-13
 Verantwortlich: Christian Heitzer, www.heitzer.info
 
 Erzeugt aus den Typdeklarationen in `packages/modul-sdk` (maßgeblich sind die Typen; Regeln und Aufrufstellen im Core:
@@ -47,6 +47,7 @@ Alle Beiträge eines Moduls
 | `assistentWerkzeuge` | nein | `AssistentWerkzeugBeitrag[]` | 0.13.1: Werkzeuge für den KI-Assistenten und den KI-Zugriff (MCP) |
 | `kiGlossar` | nein | `KiGlossarBeitrag[]` | 0.13.2 (Vertrag 2.1.0): Fachbegriffe für das Glossar des KI-Assistenten |
 | `aufmassZiele` | nein | `AufmassZiel[]` | – |
+| `freigabeRegeln` | nein | `FreigabeRegelQuelle[]` | 0.16.14 (Vertrag 2.4.0, optional): Freigabe- und Vier-Augen-Regeln für die Systemübersicht |
 
 ## Web: WebModul (`@gm/web/sdk`)
 

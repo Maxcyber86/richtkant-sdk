@@ -1,3 +1,4 @@
+import type { FreigabeRegelZustand } from '../core/vieraugen.js';
 import type { FuellungsRechner } from '../core/modulsystem/fuellung.js';
 import type { KiGlossarEintrag } from '../core/ki-glossar.js';
 import type { PositionInput } from '../core/schemas2.js';
@@ -467,6 +468,9 @@ export interface AufmassZiel {
         nummer: string;
     } | null>;
 }
+export interface FreigabeRegelQuelle {
+    regeln(db: DbOrTx): Promise<FreigabeRegelZustand[]>;
+}
 /** Alle Beiträge eines Moduls */
 export interface ErweiterungsSatz {
     positionstypen?: PositionstypErweiterung[];
@@ -492,6 +496,8 @@ export interface ErweiterungsSatz {
     /** 0.13.2 (Vertrag 2.1.0): Fachbegriffe für das Glossar des KI-Assistenten */
     kiGlossar?: KiGlossarBeitrag[];
         aufmassZiele?: AufmassZiel[];
+    /** 0.16.14 (Vertrag 2.4.0, optional): Freigabe- und Vier-Augen-Regeln für die Systemübersicht */
+    freigabeRegeln?: FreigabeRegelQuelle[];
 }
 export type ErweiterungsPunkt = keyof ErweiterungsSatz;
 /** Hintergrundaufgabe eines Moduls (Spiegel von ModulHintergrundaufgabe, ohne Importzyklus auf sdk/modul.ts) */

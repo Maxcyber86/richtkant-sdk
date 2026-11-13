@@ -1,6 +1,6 @@
-# Modul-SDK und Modulvertrag 2.3.0
+# Modul-SDK und Modulvertrag 2.4.0
 
-Richtkant ERP 0.16.13 · Modulvertrag 2.3.0 · Stand 2026-11-12
+Richtkant ERP 0.16.14 · Modulvertrag 2.4.0 · Stand 2026-11-13
 Verantwortlich: Christian Heitzer, www.heitzer.info
 
 Versionierter Vertrag zwischen Richtkant Core und Modulen: Versionierung, Abwärtskompatibilität und Deprecation, die vollständige
@@ -13,7 +13,7 @@ der Dokumentation des Herstellers; Abschnitte zur internen Entwicklung sind nich
 
 ## 1. Vertrag und Versionierung
 
-- **Vertragsversion des Core:** `MODUL_VERTRAG_VERSION = '2.3.0'` (ab 0.16.13; 2.2.0 ab 0.14.0; `@gm/core`, Semantic Versioning).
+- **Vertragsversion des Core:** `MODUL_VERTRAG_VERSION = '2.4.0'` (ab 0.16.14; 2.3.0 ab 0.16.13; 2.2.0 ab 0.14.0; `@gm/core`, Semantic Versioning).
 - **Anforderung des Moduls:** `manifest.vertrag` ist ein Semver-Bereich, in der Regel `'^2.0.0'` (Minor- und Patch-Versionen des Vertrags 2 sind zulässig). Ein Modul, das einen erst mit 2.1.0 eingeführten Punkt nutzt, erklärt `'^2.1.0'`; ein Core mit 2.0.0 lehnt es dann ab.
 - **Prüfung:** `vertragKompatibel(anforderung)` (Registry). Kompatibel, wenn `MODUL_VERTRAG_VERSION` den Bereich erfüllt. Unterstützte ältere Hauptversionen (`MODUL_VERTRAG_UNTERSTUETZT`, derzeit `[1, 2]`) werden zusätzlich angenommen; sie stehen in `MODUL_VERTRAG_VERALTET` und erzeugen einen Hinweis (`VERTRAG_VERALTET`, sichtbar in `GET /module/pakete` als `hinweise`), keinen Fehler.
 - **Abbildung der Altform:** Die bis 0.13.0 übliche Zahl `vertrag: 1` gilt als `'^1.0.0'`; eine einfache Version wie `'2.0.0'` gilt als `'^2.0.0'`.
@@ -25,6 +25,8 @@ der Dokumentation des Herstellers; Abschnitte zur internen Entwicklung sind nich
 | Neuer Erweiterungspunkt, neues optionales Feld in Manifest, `ServerModul`, `WebModul` oder einem Beitrag, neue optionale Slot-Prop, neuer SDK-Export | Minor (2.x.0) |
 | Klarstellung in Dokumentation oder Typkommentar ohne Formänderung | Patch (2.0.x) |
 | Entfernen oder Umbenennen eines Punkts, Exports oder Felds, neues Pflichtfeld, geänderte Signatur oder Bedeutung | Major (3.0.0) |
+
+**Was 2.4.0 gegenüber 2.3.0 ändert (0.16.14, Minor, abwärtskompatibel; Modulgrenzen unverändert gültig):** optionaler Server-Erweiterungspunkt `freigabeRegeln` (Abschnitt 3) mit dem Typ `FreigabeRegelQuelle` (`@gm/server/sdk`) und `FreigabeRegelZustand` sowie die einheitlichen Texte `VIER_AUGEN_TEXTE`/`abGrenzeText` (`@gm/core`). Erweiterte Parameter bestehender SDK-Funktionen (nur zusätzliche Formen, bisherige Aufrufe gelten unverändert): `putSetting(db, key, wert, wer)` nimmt als `wer` die Anfrage (Person und IP-Adresse im Protokoll), eine Benutzerkennung, eine Person oder `null` (System) und schreibt jede Änderung mit einem Eintrag `einstellungen.geaendert` (vorher/nachher, Geheimnisse maskiert) in derselben Transaktion; `createDmsDocument` nimmt auch eine Transaktion (`DbOrTx`). Module, die einen dieser Punkte nutzen, erklären `vertrag: '^2.4.0'`; Module mit `'^2.0.0'` bis `'^2.3.0'` laufen unverändert weiter (ihre Einstellungen werden über `putSetting` ebenfalls protokolliert). Das Feldregister der Einstellungen (Feldsuche, „Abweichend vom Standard“, Fristenübersicht) umfasst in 2.4.0 nur Einstellungen des Core; ein Erweiterungspunkt für Felder der Module ist nicht Teil von 2.4.0.
 
 **Was 2.3.0 gegenüber 2.2.0 ändert (0.16.13, Minor, abwärtskompatibel; Modulgrenzen unverändert gültig):** neue Exporte von `@gm/web/sdk` – Listenvertrag, Eingaben zum Serverstand (`useServerEntwurf` mit `sendet()` und `gespeichert(neu?, gesendet?)`, `useBeimOeffnen`, `EntwurfKonfliktHinweis`) und Gerätespeicher, Tastaturbedienung zusammengesetzter Bedienelemente; optionale Eigenschaft `busy` an `SelectInput`, `Checkbox`, `Switch` und `SchalterFeld` (Aktion läuft, Fokus bleibt). Server: Export `kalkulationsSeitenSql` (`@gm/server/sdk`) und die optionalen Punkte `liste.seite`/`liste.anzahl` des Erweiterungspunkts `kalkulationsQuellen` (Abschnitt 3). Module, die einen dieser Punkte nutzen, erklären `vertrag: '^2.3.0'`; Module mit `'^2.0.0'` bis `'^2.2.0'` laufen unverändert weiter.
 
@@ -88,6 +90,7 @@ Alle Typen sind im SDK exportiert. Ein Beitrag zählt nur, solange sein Modul wi
 | `fuellungen` | `FuellungsAnbieter` | 2.0.0: Füllungen von Elementen (Abschnitt 4) |
 | `assistentWerkzeuge` | `AssistentWerkzeugBeitrag` | 0.13.1: Werkzeuge für KI-Assistent und KI-Zugriff (MCP); nur bei aktivem Modul, mit Rechteprüfung, Positivliste der Schnittstellenaufrufe (`routen`), schreibende Werkzeuge liefern einen Plan (`planen`), ausgeführt wird erst nach Bestätigung durch den Core |
 | `kiGlossar` | `KiGlossarBeitrag` (`modul`, `titel`, `eintraege: { begriff, erklaerung }[]`) | 2.1.0: Fachbegriffe für das Glossar im festen Anfang jeder Anfrage des KI-Assistenten (nach den Systemregeln, vor dem Werkzeugkatalog); nur aktive Module; reine Daten. Grenzen: Begriff bis 60, Erläuterung bis 400 Zeichen, höchstens 150 Einträge je Modul; ungültige Einträge entfallen, doppelte Begriffe zählen einmal. Ausgabe stabil: Core zuerst, Module nach Schlüssel, Begriffe nach Codepunkt sortiert (bitgleich zwischen Anfragen). Inhalte knapp und fachlich belegt (Norm bzw. Fundstelle), nichts Unbelegtes. B. |
+| `freigabeRegeln` | `FreigabeRegelQuelle` (`regeln(db)` → `FreigabeRegelZustand[]`: `key`, `bereich`, `titel`, `aktiv`, `text`, `funktion`) | 0.16.14: Zeilen des Moduls in der Übersicht „Freigaben und Vier-Augen“ der Systemübersicht; nur lesend, Texte im Muster „Vier-Augen-Prinzip: …“ (vollständiger Satz), Betragsgrenzen „ab … (einschließlich)“. Ein Fehler des Moduls lässt die Übersicht stehen. |
 
 Katalogarten, Importadapter und Laufzwecke registrieren Module beim Laden über `katalogArtRegistrieren`, `importAdapterRegistrieren`, `laufZweckRegistrieren` (SDK).
 

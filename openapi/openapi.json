@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Richtkant ERP API",
-    "version": "0.16.13",
+    "version": "0.16.14",
     "description": "Öffentliche API: Anmeldung mit `Authorization: Bearer rkapi_…` (API-Zugang unter Administration › Schnittstellen › API-Zugänge). Beträge in Cent."
   },
   "components": {
@@ -598,6 +598,75 @@
           }
         },
         "operationId": "getAdminEmailZustand"
+      }
+    },
+    "/api/v1/admin/feldregister": {
+      "get": {
+        "tags": [
+          "Administration"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 120
+            },
+            "in": "query",
+            "name": "einstellung",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 240
+            },
+            "in": "query",
+            "name": "feld",
+            "required": false
+          },
+          {
+            "schema": {
+              "default": "voll",
+              "type": "string",
+              "enum": [
+                "voll",
+                "suche"
+              ]
+            },
+            "in": "query",
+            "name": "umfang",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 120
+            },
+            "in": "query",
+            "name": "q",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "getAdminFeldregister"
+      }
+    },
+    "/api/v1/admin/freigaben-uebersicht": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "getAdminFreigabenUebersicht"
       }
     },
     "/api/v1/admin/gobd-export": {
@@ -4239,6 +4308,263 @@
           }
         },
         "operationId": "postAuswertungenAusfuehren"
+      }
+    },
+    "/api/v1/auswertungen/ausfuehren/buendel": {
+      "post": {
+        "tags": [
+          "Auswertungen"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "definitionen": {
+                    "minItems": 1,
+                    "maxItems": 40,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "version": {
+                          "default": 1,
+                          "type": "number",
+                          "enum": [
+                            1
+                          ]
+                        },
+                        "quelle": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 40,
+                          "pattern": "^[a-z0-9_]+$"
+                        },
+                        "darstellung": {
+                          "type": "string",
+                          "enum": [
+                            "kpi",
+                            "saeulen",
+                            "balken",
+                            "linie",
+                            "flaeche",
+                            "gestapelt",
+                            "ring",
+                            "tabelle",
+                            "pivot"
+                          ]
+                        },
+                        "kennzahlen": {
+                          "minItems": 1,
+                          "maxItems": 4,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 40,
+                            "pattern": "^[a-z0-9_]+$"
+                          }
+                        },
+                        "dimension": {
+                          "default": null,
+                          "nullable": true,
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 40,
+                          "pattern": "^[a-z0-9_]+$"
+                        },
+                        "zeitraster": {
+                          "default": "monat",
+                          "type": "string",
+                          "enum": [
+                            "tag",
+                            "woche",
+                            "monat",
+                            "quartal",
+                            "jahr"
+                          ]
+                        },
+                        "aufteilung": {
+                          "default": null,
+                          "nullable": true,
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 40,
+                          "pattern": "^[a-z0-9_]+$"
+                        },
+                        "filter": {
+                          "default": [],
+                          "maxItems": 10,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "feld": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 40
+                              },
+                              "operator": {
+                                "type": "string",
+                                "enum": [
+                                  "gleich",
+                                  "ungleich",
+                                  "enthaelt"
+                                ]
+                              },
+                              "werte": {
+                                "minItems": 1,
+                                "maxItems": 50,
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "maxLength": 200
+                                }
+                              }
+                            },
+                            "required": [
+                              "feld",
+                              "operator",
+                              "werte"
+                            ]
+                          }
+                        },
+                        "zeitraum": {
+                          "default": {
+                            "preset": "letzte_12_monate"
+                          },
+                          "type": "object",
+                          "properties": {
+                            "preset": {
+                              "type": "string",
+                              "enum": [
+                                "gesamt",
+                                "heute",
+                                "letzte_7_tage",
+                                "letzte_30_tage",
+                                "letzte_90_tage",
+                                "dieser_monat",
+                                "letzter_monat",
+                                "dieses_quartal",
+                                "letztes_quartal",
+                                "jahr_bis_heute",
+                                "dieses_jahr",
+                                "letztes_jahr",
+                                "letzte_12_monate",
+                                "benutzerdefiniert"
+                              ]
+                            },
+                            "von": {
+                              "nullable": true,
+                              "type": "string",
+                              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                            },
+                            "bis": {
+                              "nullable": true,
+                              "type": "string",
+                              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                            }
+                          },
+                          "required": [
+                            "preset"
+                          ]
+                        },
+                        "dashboardZeitraum": {
+                          "default": true,
+                          "type": "boolean"
+                        },
+                        "vergleich": {
+                          "default": "keiner",
+                          "type": "string",
+                          "enum": [
+                            "keiner",
+                            "vorperiode",
+                            "vorjahr"
+                          ]
+                        },
+                        "sortierung": {
+                          "default": "dimension",
+                          "type": "string",
+                          "enum": [
+                            "dimension",
+                            "wert_ab",
+                            "wert_auf"
+                          ]
+                        },
+                        "limit": {
+                          "default": null,
+                          "nullable": true,
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 100
+                        },
+                        "zielwert": {
+                          "default": null,
+                          "nullable": true,
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "quelle",
+                        "darstellung",
+                        "kennzahlen"
+                      ]
+                    }
+                  },
+                  "dashboardZeitraum": {
+                    "nullable": true,
+                    "type": "object",
+                    "properties": {
+                      "preset": {
+                        "type": "string",
+                        "enum": [
+                          "gesamt",
+                          "heute",
+                          "letzte_7_tage",
+                          "letzte_30_tage",
+                          "letzte_90_tage",
+                          "dieser_monat",
+                          "letzter_monat",
+                          "dieses_quartal",
+                          "letztes_quartal",
+                          "jahr_bis_heute",
+                          "dieses_jahr",
+                          "letztes_jahr",
+                          "letzte_12_monate",
+                          "benutzerdefiniert"
+                        ]
+                      },
+                      "von": {
+                        "nullable": true,
+                        "type": "string",
+                        "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                      },
+                      "bis": {
+                        "nullable": true,
+                        "type": "string",
+                        "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                      }
+                    },
+                    "required": [
+                      "preset"
+                    ]
+                  }
+                },
+                "required": [
+                  "definitionen"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "postAuswertungenAusfuehrenBuendel"
       }
     },
     "/api/v1/auswertungen/berichte": {
@@ -15618,6 +15944,19 @@
         "operationId": "postCustomersByIdZusammenfuehren"
       }
     },
+    "/api/v1/datenschutz/fristen": {
+      "get": {
+        "tags": [
+          "Datenschutz"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "getDatenschutzFristen"
+      }
+    },
     "/api/v1/datenschutz/vvt": {
       "get": {
         "tags": [
@@ -19847,6 +20186,7 @@
         "tags": [
           "Eingangsrechnungen"
         ],
+        "description": "Freigaberegeln der Eingangsrechnungen. Ab 0.16.14 gilt `grenzeCent` einschließlich (zwei Freigaben ab dem Betrag, Kennzeichen `grenzeAb: true`); ohne gespeicherte Regel Vorgabe ab 5.000,00 € (bis 0.16.13: über 5.000,00 €).",
         "responses": {
           "200": {
             "description": "Default Response"
@@ -19858,6 +20198,7 @@
         "tags": [
           "Eingangsrechnungen"
         ],
+        "description": "Freigaberegeln speichern. Ab 0.16.14 gilt `grenzeCent` einschließlich: zwei Freigaben ab diesem Bruttobetrag (bis 0.16.13: darüber). Für das bisherige Verhalten den Wert um 1 Cent erhöht senden; `grenzeAb` setzt der Server.",
         "requestBody": {
           "required": true,
           "content": {
@@ -19885,6 +20226,12 @@
                   },
                   "pruefprotokollBeilegen": {
                     "type": "boolean"
+                  },
+                  "grenzeAb": {
+                    "type": "boolean",
+                    "enum": [
+                      true
+                    ]
                   }
                 },
                 "required": [
@@ -43267,6 +43614,11 @@
                     "type": "integer",
                     "minimum": 1,
                     "maximum": 365
+                  },
+                  "geschaeftsjahrBeginn": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 12
                   },
                   "compliance": {
                     "default": {

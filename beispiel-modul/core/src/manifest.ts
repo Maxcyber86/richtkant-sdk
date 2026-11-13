@@ -1,5 +1,5 @@
 /**
- * Manifest des Beispielmoduls (Modulvertrag 2.3.0). Das Manifest ist rein (keine Datenbank, kein DOM) und wird von
+ * Manifest des Beispielmoduls (Modulvertrag 2.4.0). Das Manifest ist rein (keine Datenbank, kein DOM) und wird von
  * Server- und Web-Teil gleichermaßen verwendet. Alle Schlüssel sind dauerhaft: einmal ausgeliefert, nie umbenennen.
  */
 import type { DemoModulDef, ModulManifest } from '@gm/core';
@@ -28,8 +28,8 @@ export const BEISPIEL_MANIFEST: ModulManifest = {
   schluessel: 'beispiel',
   name: 'Beispielmodul Prüfpunkte',
   version: '1.0.0',
-  vertrag: '^2.3.0',
-  core: '>=0.16.13 <0.17.0',
+  vertrag: '^2.4.0',
+  core: '>=0.16.14 <0.17.0',
   herausgeber: 'partner',
   lizenz: { spdx: 'Apache-2.0', hinweise: 'Beispielmodul des Richtkant Modul-SDK. Keine eigenen Fremdabhängigkeiten.' },
   beschreibung: 'Wiederkehrende Prüfpunkte mit Fälligkeit (Beispiel für Modulentwickler).',

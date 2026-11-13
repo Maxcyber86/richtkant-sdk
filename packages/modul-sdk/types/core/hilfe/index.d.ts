@@ -211,6 +211,7 @@ export declare const HILFE: {
     readonly "administration.betrieb.hintergrund": HilfeThema;
     readonly "administration.betrieb.zugaenge": HilfeThema;
     readonly "administration.betrieb.virenpruefung": HilfeThema;
+    readonly "administration.virenpruefung": HilfeThema;
     readonly "administration.betrieb.einstellungen": HilfeThema;
     readonly "material.inventur": HilfeThema;
     readonly "material.inventur.zaehlung": HilfeThema;
@@ -327,6 +328,7 @@ export declare const HILFE: {
     readonly "modul.administration": HilfeThema;
     readonly "administration.systemuebersicht": HilfeThema;
     readonly "administration.systemuebersicht.einrichtung": HilfeThema;
+    readonly "administration.systemuebersicht.freigaben": HilfeThema;
     readonly "administration.systemuebersicht.rechtliches": HilfeThema;
     readonly "administration.benutzer": HilfeThema;
     readonly "administration.benutzer.anmeldeart": HilfeThema;
@@ -455,6 +457,7 @@ export declare const HILFE: {
     readonly "administration.buchhaltung.verbindungen": HilfeThema;
     readonly "administration.buchhaltung.mapping": HilfeThema;
     readonly "administration.buchhaltung.sepa": HilfeThema;
+    readonly "finanzen.zahlungsverkehr": HilfeThema;
     readonly "vertrieb.kunden.zahlung": HilfeThema;
     readonly "vertrieb.kunden.mandate": HilfeThema;
     readonly "einkauf.lieferanten.zahlung": HilfeThema;
