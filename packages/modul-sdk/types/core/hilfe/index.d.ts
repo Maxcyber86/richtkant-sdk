@@ -1,6 +1,7 @@
 import { type HilfeThema } from './modell.js';
 export declare const HILFE: {
     readonly "administration.standort_gateways": HilfeThema;
+    readonly "administration.standort_gateways.geraete.cnc": HilfeThema;
     readonly "administration.standort_gateways.geraete": HilfeThema;
     readonly "administration.standort_gateways.netz": HilfeThema;
     readonly "administration.standort_gateways.auftraege": HilfeThema;

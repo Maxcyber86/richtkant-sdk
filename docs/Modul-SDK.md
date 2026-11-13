@@ -1,6 +1,6 @@
-# Modul-SDK und Modulvertrag 2.2.0
+# Modul-SDK und Modulvertrag 2.3.0
 
-Richtkant ERP 0.16.12 · Modulvertrag 2.2.0 · Stand 2026-11-12
+Richtkant ERP 0.16.13 · Modulvertrag 2.3.0 · Stand 2026-11-12
 Verantwortlich: Christian Heitzer, www.heitzer.info
 
 Versionierter Vertrag zwischen Richtkant Core und Modulen: Versionierung, Abwärtskompatibilität und Deprecation, die vollständige
@@ -13,7 +13,7 @@ der Dokumentation des Herstellers; Abschnitte zur internen Entwicklung sind nich
 
 ## 1. Vertrag und Versionierung
 
-- **Vertragsversion des Core:** `MODUL_VERTRAG_VERSION = '2.2.0'` (ab 0.14.0; `@gm/core`, Semantic Versioning).
+- **Vertragsversion des Core:** `MODUL_VERTRAG_VERSION = '2.3.0'` (ab 0.16.13; 2.2.0 ab 0.14.0; `@gm/core`, Semantic Versioning).
 - **Anforderung des Moduls:** `manifest.vertrag` ist ein Semver-Bereich, in der Regel `'^2.0.0'` (Minor- und Patch-Versionen des Vertrags 2 sind zulässig). Ein Modul, das einen erst mit 2.1.0 eingeführten Punkt nutzt, erklärt `'^2.1.0'`; ein Core mit 2.0.0 lehnt es dann ab.
 - **Prüfung:** `vertragKompatibel(anforderung)` (Registry). Kompatibel, wenn `MODUL_VERTRAG_VERSION` den Bereich erfüllt. Unterstützte ältere Hauptversionen (`MODUL_VERTRAG_UNTERSTUETZT`, derzeit `[1, 2]`) werden zusätzlich angenommen; sie stehen in `MODUL_VERTRAG_VERALTET` und erzeugen einen Hinweis (`VERTRAG_VERALTET`, sichtbar in `GET /module/pakete` als `hinweise`), keinen Fehler.
 - **Abbildung der Altform:** Die bis 0.13.0 übliche Zahl `vertrag: 1` gilt als `'^1.0.0'`; eine einfache Version wie `'2.0.0'` gilt als `'^2.0.0'`.
@@ -25,6 +25,10 @@ der Dokumentation des Herstellers; Abschnitte zur internen Entwicklung sind nich
 | Neuer Erweiterungspunkt, neues optionales Feld in Manifest, `ServerModul`, `WebModul` oder einem Beitrag, neue optionale Slot-Prop, neuer SDK-Export | Minor (2.x.0) |
 | Klarstellung in Dokumentation oder Typkommentar ohne Formänderung | Patch (2.0.x) |
 | Entfernen oder Umbenennen eines Punkts, Exports oder Felds, neues Pflichtfeld, geänderte Signatur oder Bedeutung | Major (3.0.0) |
+
+**Was 2.3.0 gegenüber 2.2.0 ändert (0.16.13, Minor, abwärtskompatibel; Modulgrenzen unverändert gültig):** neue Exporte von `@gm/web/sdk` – Listenvertrag, Eingaben zum Serverstand (`useServerEntwurf` mit `sendet()` und `gespeichert(neu?, gesendet?)`, `useBeimOeffnen`, `EntwurfKonfliktHinweis`) und Gerätespeicher, Tastaturbedienung zusammengesetzter Bedienelemente; optionale Eigenschaft `busy` an `SelectInput`, `Checkbox`, `Switch` und `SchalterFeld` (Aktion läuft, Fokus bleibt). Server: Export `kalkulationsSeitenSql` (`@gm/server/sdk`) und die optionalen Punkte `liste.seite`/`liste.anzahl` des Erweiterungspunkts `kalkulationsQuellen` (Abschnitt 3). Module, die einen dieser Punkte nutzen, erklären `vertrag: '^2.3.0'`; Module mit `'^2.0.0'` bis `'^2.2.0'` laufen unverändert weiter.
+
+*Hinweis für Fremdmodule ohne `liste.anzahl`:* Liefert eine Kalkulationsquelle `liste.seite`, aber keine Zählung, zählt der Core über `liste.zeilen` zurück (nur die Menge, die diese liefert). Die Zahl am Reiter („x von N“) kann dann zu klein sein; Module sollten `liste.anzahl` zusammen mit `liste.seite` liefern (keine Änderung am Vertrag).
 
 **Was 2.2.0 gegenüber 2.1.0 ändert (0.14.0, Minor, abwärtskompatibel):** neue SDK-Exporte für die Bestätigung per Passkey: `mitPasskeyBestaetigt` (`@gm/server/sdk`, prüft ein einmaliges Bestätigungstoken je Person, Sitzung und Zweck) sowie `PasskeyBestaetigenKnopf`, `OderKennwort`, `passkeyBestaetigungHolen` und `useBestaetigungsArten` (`@gm/web/sdk`). Außerdem: optionales Feld `unter` an Funktionen im Verzeichnis (Einordnung als Unterpunkt eines Menüeintrags statt `menue: true`, z. B. `unter: 'vertrieb.kalkulationen'`) und der Server-Erweiterungspunkt `aufmassZiele` (Übernahme einer Aufmaßposition aus dem Einsatz in die Kalkulation des Moduls). Module, die einen dieser Punkte nutzen, erklären `vertrag: '^2.2.0'`; Module mit `'^2.0.0'` bzw. `'^2.1.0'` laufen unverändert weiter.
 
@@ -73,7 +77,7 @@ Alle Typen sind im SDK exportiert. Ein Beitrag zählt nur, solange sein Modul wi
 | `aaQuellen` | `AaQuelle` | Arbeitsaufträge: Material, Maße, Schritte, Detail, Blatt, Zeichnung |
 | `insightQuellen` | `InsightQuelle` | Lieferanten-Kennzahlen |
 | `datenschutzHooks` | `DatenschutzHook` | DSGVO-Anonymisierung (läuft unabhängig vom Status, solange Daten vorhanden) |
-| `kalkulationsQuellen` | `KalkulationsQuelle` | Kunde › Kalkulationen, Kalkulationsliste, Übernahme in Belege |
+| `kalkulationsQuellen` | `KalkulationsQuelle` | Kunde › Kalkulationen, Kalkulationsliste, Übernahme in Belege. 0.16.13: optional `liste.seite(db, sicht, a)` (eine Seite mit Filtern in der Datenbank – Suche, Kunde, ohne Demo, Quellenfilter – hinter dem Cursor `a.nach`, Erstellzeit und Kennung absteigend; Bedingung und Sortierung über `kalkulationsSeitenSql` aus `@gm/server/sdk`) und `liste.anzahl(db, a)` (Zählung für „x von N“); ohne diese Punkte blättert der Core über `liste.zeilen` (nur deren Menge) |
 | `artikelErweiterungen` | `ArtikelErweiterung` | Artikel anlegen/ändern, Stammdatenimport |
 | `stammdatenFelder` | `StammdatenFeld` | Erweiterungsfelder an Artikel und Lieferant |
 | `preisStichtag` | `PreisStichtagBeitrag` | täglicher Preis-Stichtag |
@@ -87,7 +91,9 @@ Alle Typen sind im SDK exportiert. Ein Beitrag zählt nur, solange sein Modul wi
 
 Katalogarten, Importadapter und Laufzwecke registrieren Module beim Laden über `katalogArtRegistrieren`, `importAdapterRegistrieren`, `laufZweckRegistrieren` (SDK).
 
-**Web: `WebModul`** (`@gm/web/sdk`): `seiten` (je Routenschlüssel, nachgeladen), `admin` (je Admin-Funktion), `icons`, `slots`, `hilfe`, `changelog` (Abschnitt 10). Bausteine der Oberfläche kommen ausschließlich aus `@gm/web/sdk`, darunter ab 0.13.1 `Tooltip` und `useTooltip` sowie `IconButton`/`Button` mit Prop `tooltip` und `ModulFehlergrenze`. Slots mit Props (`WebSlotProps`, Komponente `WebSlotKomponente<S>`):
+**Web: `WebModul`** (`@gm/web/sdk`): `seiten` (je Routenschlüssel, nachgeladen), `admin` (je Admin-Funktion), `icons`, `slots`, `hilfe`, `changelog` (Abschnitt 10). Bausteine der Oberfläche kommen ausschließlich aus `@gm/web/sdk`, ab 0.16.13 auch die Listenbausteine `useNachladeListe`, `NachladenLeiste`, `SuchHinweis` und `useAlleSeiten`, darunter ab 0.13.1 `Tooltip` und `useTooltip` sowie `IconButton`/`Button` mit Prop `tooltip` und `ModulFehlergrenze`. Slots mit Props (`WebSlotProps`, Komponente `WebSlotKomponente<S>`):
+
+**Eingaben und Gerätespeicher:** `@gm/web/sdk` exportiert `useServerEntwurf` (Formularentwurf zu einem Serverstand; ein Hintergrund-Refetch überschreibt keine Eingaben, Option `schluessel` für Dialoge, `jeFeld` für Sammlungen), `useBeimOeffnen` (Abbild beim Öffnen eines Dialogs), `EntwurfKonfliktHinweis` sowie `lokalerSpeicher`/`sitzungsSpeicher` (Gerätespeicher; jeder Schlüssel muss mit Zweck und Personenbezug registriert sein, personenbezogene Einträge werden beim Abmelden und beim Wechsel der Person geleert).
 
 | Slot | Props | Schlüssel des Beitrags |
 |---|---|---|

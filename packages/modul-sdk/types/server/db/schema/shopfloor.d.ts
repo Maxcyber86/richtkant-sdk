@@ -223,6 +223,40 @@ export declare const maschinen: import("drizzle-orm/pg-core").PgTableWithColumns
             identity: undefined;
             generated: undefined;
         }, {}, {}>;
+        dncGeraetId: import("drizzle-orm/pg-core").PgColumn<{
+            name: "dnc_geraet_id";
+            tableName: "maschinen";
+            dataType: "string";
+            columnType: "PgUUID";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: false;
+            isPrimaryKey: false;
+            isAutoincrement: false;
+            hasRuntimeDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+            identity: undefined;
+            generated: undefined;
+        }, {}, {}>;
+        statusGeraetId: import("drizzle-orm/pg-core").PgColumn<{
+            name: "status_geraet_id";
+            tableName: "maschinen";
+            dataType: "string";
+            columnType: "PgUUID";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: false;
+            isPrimaryKey: false;
+            isAutoincrement: false;
+            hasRuntimeDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+            identity: undefined;
+            generated: undefined;
+        }, {}, {}>;
         isTest: import("drizzle-orm/pg-core").PgColumn<{
             name: "is_test";
             tableName: "maschinen";

@@ -149,12 +149,37 @@ export interface KalkulationsQuelle {
      */
     liste?: {
         anzeige: KalkulationsListeAnzeige;
+        /** Neueste Kalkulationen (abwärtsverträgliche Liste ohne Blättern; Grenze der Quelle) */
         zeilen(db: DbOrTx, sicht: {
             ek: boolean;
             vk: boolean;
             intern: boolean;
         }): Promise<KalkulationsZeile[]>;
+                seite?(db: DbOrTx, sicht: {
+            ek: boolean;
+            vk: boolean;
+            intern: boolean;
+        }, a: KalkulationsSeitenAbfrage): Promise<KalkulationsZeile[]>;
+        /** 0.16.13 (additiv): Anzahl der Kalkulationen mit denselben Filtern (ohne Cursor), für Reiter und „x von N“ */
+        anzahl?(db: DbOrTx, a: Omit<KalkulationsSeitenAbfrage, 'grenze' | 'nach'>): Promise<number>;
     };
+}
+export interface KalkulationsSeitenAbfrage {
+    /** Höchstzahl der Zeilen (der Core übergibt Seitengröße + 1) */
+    grenze: number;
+    /** Fortsetzung: nur Zeilen hinter (Erstellzeit in ms als ISO-Text, Kennung) in absteigender Folge */
+    nach?: {
+        zeit: string;
+        id: string;
+    } | null;
+    /** Suchbegriff (Nummer, Bezeichnung, Kunde; Quelle darf weitere Felder einbeziehen) */
+    q?: string;
+    /** nur Kalkulationen dieses Kunden */
+    kundeId?: string;
+    /** Demo-Kalkulationen ausblenden */
+    ohneDemo?: boolean;
+    /** Wert des Quellenfilters (`anzeige.filter`), z. B. Freigabestand */
+    filterWert?: string;
 }
 /** Darstellung einer Kalkulationsquelle in der Kalkulationsliste */
 export interface KalkulationsListeAnzeige {

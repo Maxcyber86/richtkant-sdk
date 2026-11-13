@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Richtkant ERP API",
-    "version": "0.16.12",
+    "version": "0.16.13",
     "description": "Öffentliche API: Anmeldung mit `Authorization: Bearer rkapi_…` (API-Zugang unter Administration › Schnittstellen › API-Zugänge). Beträge in Cent."
   },
   "components": {
@@ -2051,6 +2051,9 @@
                     "type": "string",
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "mehrentnahme": {
+                    "type": "boolean"
                   }
                 },
                 "required": [
@@ -3315,6 +3318,56 @@
           }
         },
         "operationId": "postArticlesByIdBilder"
+      }
+    },
+    "/api/v1/articles/{id}/bilder-reihenfolge": {
+      "put": {
+        "tags": [
+          "Artikel"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ids": {
+                    "minItems": 1,
+                    "maxItems": 20,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    }
+                  }
+                },
+                "required": [
+                  "ids"
+                ]
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "putArticlesByIdBilderReihenfolge"
       }
     },
     "/api/v1/articles/{id}/bilder/{bid}": {
@@ -6918,6 +6971,18 @@
       "get": {
         "tags": [
           "Einkauf"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "query",
+            "name": "lieferantId",
+            "required": false
+          }
         ],
         "responses": {
           "200": {
@@ -15871,6 +15936,17 @@
           },
           {
             "schema": {
+              "type": "string",
+              "enum": [
+                "email"
+              ]
+            },
+            "in": "query",
+            "name": "ohneQuelle",
+            "required": false
+          },
+          {
+            "schema": {
               "default": "alle",
               "type": "string",
               "enum": [
@@ -16429,7 +16505,7 @@
           {
             "schema": {
               "type": "string",
-              "maxLength": 20
+              "maxLength": 200
             },
             "in": "query",
             "name": "status",
@@ -16452,6 +16528,18 @@
             },
             "in": "query",
             "name": "kundeId",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            },
+            "in": "query",
+            "name": "demo",
             "required": false
           },
           {
@@ -20169,6 +20257,71 @@
         "operationId": "putEingangsrechnungenByIdBestellungen"
       }
     },
+    "/api/v1/eingangsrechnungen/{id}/bestellungen-auswahl": {
+      "get": {
+        "tags": [
+          "Eingangsrechnungen"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 100
+            },
+            "in": "query",
+            "name": "q",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500
+            },
+            "in": "query",
+            "name": "proSeite",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 400
+            },
+            "in": "query",
+            "name": "cursor",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "getEingangsrechnungenByIdBestellungenAuswahl"
+      }
+    },
     "/api/v1/eingangsrechnungen/{id}/betriebsmittel-kosten": {
       "get": {
         "tags": [
@@ -20564,6 +20717,37 @@
             "in": "query",
             "name": "limit",
             "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500
+            },
+            "in": "query",
+            "name": "proSeite",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 400
+            },
+            "in": "query",
+            "name": "cursor",
+            "required": false
           }
         ],
         "responses": {
@@ -20848,6 +21032,37 @@
             },
             "in": "query",
             "name": "lieferantId",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500
+            },
+            "in": "query",
+            "name": "proSeite",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 400
+            },
+            "in": "query",
+            "name": "cursor",
             "required": false
           }
         ],
@@ -22439,6 +22654,27 @@
             },
             "in": "query",
             "name": "vor",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 400
+            },
+            "in": "query",
+            "name": "cursor",
             "required": false
           }
         ],
@@ -27029,6 +27265,80 @@
             "in": "query",
             "name": "art",
             "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 100
+            },
+            "in": "query",
+            "name": "q",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "query",
+            "name": "kundeId",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "0",
+                "1",
+                "true",
+                "false",
+                ""
+              ]
+            },
+            "in": "query",
+            "name": "ohneDemo",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 40
+            },
+            "in": "query",
+            "name": "filter",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500
+            },
+            "in": "query",
+            "name": "proSeite",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 400
+            },
+            "in": "query",
+            "name": "cursor",
+            "required": false
           }
         ],
         "responses": {
@@ -29513,6 +29823,37 @@
             "in": "query",
             "name": "offset",
             "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500
+            },
+            "in": "query",
+            "name": "proSeite",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 400
+            },
+            "in": "query",
+            "name": "cursor",
+            "required": false
           }
         ],
         "responses": {
@@ -31099,6 +31440,37 @@
             "in": "query",
             "name": "offen",
             "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500
+            },
+            "in": "query",
+            "name": "proSeite",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 400
+            },
+            "in": "query",
+            "name": "cursor",
+            "required": false
           }
         ],
         "responses": {
@@ -32078,6 +32450,17 @@
             },
             "in": "query",
             "name": "limit",
+            "required": false
+          },
+          {
+            "schema": {
+              "default": 0,
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "in": "query",
+            "name": "offset",
             "required": false
           }
         ],
@@ -34280,6 +34663,37 @@
             },
             "in": "query",
             "name": "offset",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "in": "query",
+            "name": "proSeite",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 400
+            },
+            "in": "query",
+            "name": "cursor",
             "required": false
           }
         ],
@@ -39739,6 +40153,41 @@
           {
             "schema": {
               "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "query",
+            "name": "id",
+            "required": false,
+            "description": "nur dieses Projekt (Anzeige der getroffenen Auswahl)"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "query",
+            "name": "kundeOderOhne",
+            "required": false,
+            "description": "Projekte dieses Kunden und Projekte ohne Kunden"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            },
+            "in": "query",
+            "name": "isTest",
+            "required": false,
+            "description": "nur Demodaten bzw. nur echte Daten"
+          },
+          {
+            "schema": {
+              "type": "string",
               "enum": [
                 "liste",
                 "seite"
@@ -39953,6 +40402,19 @@
           }
         },
         "operationId": "postProjekteAusAuftragById"
+      }
+    },
+    "/api/v1/projekte/kennzahlen": {
+      "get": {
+        "tags": [
+          "Projekte"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "getProjekteKennzahlen"
       }
     },
     "/api/v1/projekte/material/{id}": {
@@ -43148,6 +43610,19 @@
         "operationId": "postShopfloorAuftraegeByIdProgramme"
       }
     },
+    "/api/v1/shopfloor/cnc-geraete": {
+      "get": {
+        "tags": [
+          "Shopfloor"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "getShopfloorCncGeraete"
+      }
+    },
     "/api/v1/shopfloor/faehigkeiten": {
       "get": {
         "tags": [
@@ -43215,7 +43690,8 @@
                       "simulation",
                       "ordnerfreigabe",
                       "opcua",
-                      "ftp"
+                      "ftp",
+                      "standort_gateway"
                     ]
                   },
                   "aktiv": {
@@ -43288,7 +43764,8 @@
                       "simulation",
                       "ordnerfreigabe",
                       "opcua",
-                      "ftp"
+                      "ftp",
+                      "standort_gateway"
                     ]
                   },
                   "aktiv": {
@@ -43359,8 +43836,21 @@
                       "simulation",
                       "ordnerfreigabe",
                       "opcua",
-                      "ftp"
+                      "ftp",
+                      "standort_gateway"
                     ]
+                  },
+                  "dncGeraetId": {
+                    "nullable": true,
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "statusGeraetId": {
+                    "nullable": true,
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                   }
                 }
               }
@@ -43458,6 +43948,49 @@
           }
         },
         "operationId": "getShopfloorProgrammeById"
+      }
+    },
+    "/api/v1/shopfloor/programme/{id}/abholen": {
+      "post": {
+        "tags": [
+          "Shopfloor"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "zeitlimitS": {
+                    "default": 300,
+                    "type": "integer",
+                    "minimum": 10,
+                    "maximum": 1800
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "postShopfloorProgrammeByIdAbholen"
       }
     },
     "/api/v1/shopfloor/programme/{id}/datei": {
@@ -45723,6 +46256,18 @@
             },
             "in": "query",
             "name": "sortierung",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
             "required": false
           }
         ],
@@ -48492,6 +49037,54 @@
             },
             "in": "query",
             "name": "reklamationId",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "beleg",
+                "zahlung",
+                "kommunikation",
+                "reklamation",
+                "einsatz",
+                "dokument",
+                "stammdaten"
+              ]
+            },
+            "in": "query",
+            "name": "art",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 400
+            },
+            "in": "query",
+            "name": "proSeite",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 400
+            },
+            "in": "query",
+            "name": "cursor",
             "required": false
           }
         ],
@@ -52343,6 +52936,37 @@
             "in": "query",
             "name": "offset",
             "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "liste",
+                "seite"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "in": "query",
+            "name": "proSeite",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 400
+            },
+            "in": "query",
+            "name": "cursor",
+            "required": false
           }
         ],
         "responses": {
@@ -55369,6 +55993,27 @@
       "get": {
         "tags": [
           "Arbeitszeit"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 100
+            },
+            "in": "query",
+            "name": "q",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "query",
+            "name": "mit",
+            "required": false
+          }
         ],
         "responses": {
           "200": {

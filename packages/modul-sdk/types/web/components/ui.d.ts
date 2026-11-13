@@ -33,10 +33,11 @@ export declare const TextInput: import("react").ForwardRefExoticComponent<InputH
     hint?: ReactNode;
     error?: string | null;
 } & import("react").RefAttributes<HTMLInputElement>>;
-export declare function SelectInput({ label, hint, error, className, id, children, ...rest }: SelectHTMLAttributes<HTMLSelectElement> & {
+export declare function SelectInput({ label, hint, error, className, id, children, busy, onChange, ...rest }: SelectHTMLAttributes<HTMLSelectElement> & {
     label?: string;
     hint?: ReactNode;
     error?: string | null;
+    busy?: boolean;
 }): import("react").JSX.Element;
 /** Zahleneingabe mit deutschem Dezimalkomma. Liefert null bei leerer Eingabe. */
 export declare function NumberInput({ label, value, onChange, unit, digits, min, max, hint, className, id, disabled, placeholder, required, fixed, ariaLabel, onScanCode, }: {
@@ -63,15 +64,16 @@ export declare function NumberInput({ label, value, onChange, unit, digits, min,
     placeholder?: string;
     required?: boolean;
 }): import("react").JSX.Element;
-export declare function Checkbox({ label, checked, onChange, hint, disabled }: {
+export declare function Checkbox({ label, checked, onChange, hint, disabled, busy }: {
     label: ReactNode;
     checked: boolean;
     onChange: (v: boolean) => void;
     hint?: ReactNode;
-    disabled?: boolean;
+    disabled?: boolean; /** 0.16.13: Aktion läuft – fokussierbar, keine Änderung */
+    busy?: boolean;
 }): import("react").JSX.Element;
 /** Ein-/Aus-Schalter (WAI-ARIA switch); Beschriftung als zugänglicher Name */
-export declare function Switch({ checked, onChange, label, disabled, title, id, ohneTooltip, }: {
+export declare function Switch({ checked, onChange, label, disabled, title, id, ohneTooltip, busy, }: {
     checked: boolean;
     onChange: (v: boolean) => void;
     label: string;
@@ -80,17 +82,19 @@ export declare function Switch({ checked, onChange, label, disabled, title, id, 
     id?: string;
     /** Beschriftung steht sichtbar daneben (z. B. SchalterFeld): kein Tooltip mit demselben Text */
     ohneTooltip?: boolean;
+    /** 0.16.13: Aktion läuft – der Schalter bleibt fokussierbar und schaltet nicht */
+    busy?: boolean;
 }): import("react").JSX.Element;
 /** Schalter mit sichtbarer Beschriftung (Klick auf den Text schaltet ebenfalls) */
-export declare function SchalterFeld({ label, sichtbar, hint, checked, onChange, disabled, }: {
+export declare function SchalterFeld({ label, sichtbar, hint, checked, onChange, disabled, busy, }: {
     label: string;
     sichtbar?: ReactNode;
     hint?: ReactNode;
     checked: boolean;
     onChange: (v: boolean) => void;
     disabled?: boolean;
+    busy?: boolean;
 }): import("react").JSX.Element;
-/** Segmentierte Auswahl für wenige, gleichrangige Optionen */
 export declare function Segmented<T extends string>({ value, onChange, options, label }: {
     value: T;
     onChange: (v: T) => void;

@@ -1,6 +1,6 @@
 # Referenz der Erweiterungspunkte
 
-Richtkant ERP 0.16.12 · Modulvertrag 2.2.0 · Stand 2026-11-12
+Richtkant ERP 0.16.13 · Modulvertrag 2.3.0 · Stand 2026-11-12
 Verantwortlich: Christian Heitzer, www.heitzer.info
 
 Erzeugt aus den Typdeklarationen in `packages/modul-sdk` (maßgeblich sind die Typen; Regeln und Aufrufstellen im Core:
