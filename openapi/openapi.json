@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Richtkant ERP API",
-    "version": "0.16.14",
+    "version": "0.17.0",
     "description": "Öffentliche API: Anmeldung mit `Authorization: Bearer rkapi_…` (API-Zugang unter Administration › Schnittstellen › API-Zugänge). Beträge in Cent."
   },
   "components": {
@@ -295,6 +295,7 @@
         "tags": [
           "Faktura"
         ],
+        "description": "Abrechenbare Zeiten und Materialentnahmen. Bedingte Pflichtangabe: `auftragId` oder `projektId` (eines von beiden; mit beiden gilt der Auftrag), sonst 400 UNGUELTIG.",
         "parameters": [
           {
             "schema": {
@@ -1444,20 +1445,6 @@
           }
         },
         "operationId": "postArbeitsauftraegeAusAuftrag"
-      }
-    },
-    "/api/v1/arbeitsauftraege/auslastung/maschinen": {
-      "get": {
-        "tags": [
-          "Arbeitsaufträge"
-        ],
-        "deprecated": true,
-        "responses": {
-          "200": {
-            "description": "Default Response"
-          }
-        },
-        "operationId": "getArbeitsauftraegeAuslastungMaschinen"
       }
     },
     "/api/v1/arbeitsauftraege/auswahl/bezuege": {
@@ -3891,6 +3878,7 @@
         "tags": [
           "Belege"
         ],
+        "description": "Fertigung anstoßen. Ohne `positionen` für alle Positionen nach den Schaltern `arbeitsauftraege` und `fertigungsauftraege`. Seit 0.17.0 (BL-062) mit `positionen` je Position: `manuell` legt einen Arbeitsauftrag an, `maschine` zusätzlich einen Fertigungsauftrag (CNC-Programm), mit dem der Arbeitsauftrag verknüpft wird; die Schalter gelten dann nicht, nicht genannte Positionen bleiben unberührt.",
         "requestBody": {
           "required": true,
           "content": {
@@ -3905,6 +3893,32 @@
                   "fertigungsauftraege": {
                     "default": true,
                     "type": "boolean"
+                  },
+                  "positionen": {
+                    "minItems": 1,
+                    "maxItems": 1000,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "positionId": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "weg": {
+                          "type": "string",
+                          "enum": [
+                            "manuell",
+                            "maschine"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "positionId",
+                        "weg"
+                      ]
+                    }
                   }
                 }
               }
@@ -6276,6 +6290,7 @@
         "tags": [
           "Auswertungen"
         ],
+        "description": "Vorkommende Werte einer Dimension (Filterauswahl). `quelle` und `dimension` müssen Schlüssel aus GET /auswertungen/katalog sein (Dimension der Quelle), sonst 400 UNGUELTIG; ohne Leserecht der Quelle 403.",
         "parameters": [
           {
             "schema": {
@@ -6284,7 +6299,8 @@
             },
             "in": "query",
             "name": "quelle",
-            "required": true
+            "required": true,
+            "description": "Schlüssel der Datenquelle aus GET /auswertungen/katalog"
           },
           {
             "schema": {
@@ -6293,7 +6309,8 @@
             },
             "in": "query",
             "name": "dimension",
-            "required": true
+            "required": true,
+            "description": "Schlüssel einer Dimension dieser Datenquelle"
           },
           {
             "schema": {
@@ -8642,6 +8659,11 @@
                     "type": "string",
                     "maxLength": 80
                   },
+                  "etikettennummer": {
+                    "nullable": true,
+                    "type": "string",
+                    "maxLength": 80
+                  },
                   "kategorieId": {
                     "nullable": true,
                     "type": "string",
@@ -9624,6 +9646,7 @@
         "tags": [
           "Betriebsmittel"
         ],
+        "description": "Einplanungen eines Bezugs. Bedingte Pflichtangabe: `einsatzId`, `projektId` oder `auftragId` (Vorrang in dieser Reihenfolge), sonst 400 UNGUELTIG.",
         "parameters": [
           {
             "schema": {
@@ -10936,6 +10959,11 @@
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                   },
                   "seriennummer": {
+                    "nullable": true,
+                    "type": "string",
+                    "maxLength": 80
+                  },
+                  "etikettennummer": {
                     "nullable": true,
                     "type": "string",
                     "maxLength": 80
@@ -12740,28 +12768,124 @@
                     "type": "object",
                     "properties": {
                       "standard19": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       },
                       "standard7": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       },
                       "standard0": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       },
                       "bau13b": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       },
                       "eu_rc": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       },
                       "igl": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       },
                       "ausfuhr": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       },
                       "klein19": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       }
                     }
                   },
@@ -12769,28 +12893,124 @@
                     "type": "object",
                     "properties": {
                       "standard19": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       },
                       "standard7": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       },
                       "standard0": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       },
                       "bau13b": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       },
                       "eu_rc": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       },
                       "igl": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       },
                       "ausfuhr": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       },
                       "klein19": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       }
                     }
                   },
@@ -12798,36 +13018,156 @@
                     "type": "object",
                     "properties": {
                       "standard19": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       },
                       "standard7": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       },
                       "standard0": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       },
                       "bau13b": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       },
                       "eu_rc": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       },
                       "igl": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       },
                       "ausfuhr": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       },
                       "klein19": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       }
                     }
                   },
                   "bankkonto": {
-                    "anyOf": []
+                    "anyOf": [
+                      {
+                        "nullable": true,
+                        "type": "string",
+                        "pattern": "^\\d{4,9}$"
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          ""
+                        ]
+                      }
+                    ]
                   },
                   "kassenkonto": {
-                    "anyOf": []
+                    "anyOf": [
+                      {
+                        "nullable": true,
+                        "type": "string",
+                        "pattern": "^\\d{4,9}$"
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          ""
+                        ]
+                      }
+                    ]
                   },
                   "debitoren": {
                     "default": {
@@ -13020,25 +13360,109 @@
                     "type": "object",
                     "properties": {
                       "vst19": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       },
                       "vst7": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       },
                       "ohne": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       },
                       "bau13b19": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       },
                       "ige19": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       },
                       "ige7": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       },
                       "eu13b19": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       }
                     }
                   },
@@ -13124,10 +13548,34 @@
                     "type": "object",
                     "properties": {
                       "gebuehren": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       },
                       "zinsen": {
-                        "anyOf": []
+                        "anyOf": [
+                          {
+                            "nullable": true,
+                            "type": "string",
+                            "pattern": "^\\d{4,9}$"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          }
+                        ]
                       }
                     }
                   },
@@ -13981,6 +14429,9 @@
                     "minimum": 10000,
                     "maximum": 699999999
                   },
+                  "terminerinnerungAus": {
+                    "type": "boolean"
+                  },
                   "hauptkontakt": {
                     "nullable": true,
                     "type": "object",
@@ -14827,6 +15278,9 @@
                     "type": "integer",
                     "minimum": 10000,
                     "maximum": 699999999
+                  },
+                  "terminerinnerungAus": {
+                    "type": "boolean"
                   },
                   "hauptkontakt": {
                     "nullable": true,
@@ -17210,6 +17664,33 @@
                             "art"
                           ],
                           "additionalProperties": false
+                        },
+                        "bild": {
+                          "nullable": true,
+                          "type": "object",
+                          "properties": {
+                            "quelle": {
+                              "type": "string",
+                              "enum": [
+                                "artikel",
+                                "upload",
+                                "modul"
+                              ]
+                            },
+                            "drucken": {
+                              "type": "boolean"
+                            },
+                            "anhangId": {
+                              "nullable": true,
+                              "type": "string",
+                              "format": "uuid",
+                              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                            }
+                          },
+                          "required": [
+                            "quelle",
+                            "drucken"
+                          ]
                         }
                       },
                       "required": [
@@ -17489,6 +17970,239 @@
           }
         },
         "operationId": "postDocumentsFromCalculations"
+      }
+    },
+    "/api/v1/documents/kalkulationsstreifen": {
+      "post": {
+        "tags": [
+          "Belege"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "typ": {
+                    "type": "string",
+                    "enum": [
+                      "angebot",
+                      "auftrag",
+                      "rechnung",
+                      "storno"
+                    ]
+                  },
+                  "positionen": {
+                    "maxItems": 500,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "typ": {
+                          "type": "string",
+                          "pattern": "^[a-z][a-z0-9_]{1,39}$"
+                        },
+                        "artikelId": {
+                          "nullable": true,
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "quelleId": {
+                          "nullable": true,
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "menge": {
+                          "type": "number",
+                          "minimum": -1000000,
+                          "maximum": 1000000
+                        },
+                        "einheit": {
+                          "type": "string",
+                          "maxLength": 10
+                        },
+                        "einzelpreisCent": {
+                          "type": "integer",
+                          "minimum": -2000000000,
+                          "maximum": 2000000000
+                        },
+                        "ekCent": {
+                          "nullable": true,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 2000000000
+                        },
+                        "rabattProzent": {
+                          "default": 0,
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 100
+                        },
+                        "ustSatz": {
+                          "default": 19,
+                          "anyOf": [
+                            {
+                              "type": "number",
+                              "enum": [
+                                19
+                              ]
+                            },
+                            {
+                              "type": "number",
+                              "enum": [
+                                7
+                              ]
+                            },
+                            {
+                              "type": "number",
+                              "enum": [
+                                0
+                              ]
+                            }
+                          ]
+                        },
+                        "gaeb": {
+                          "nullable": true,
+                          "type": "object",
+                          "properties": {
+                            "art": {
+                              "type": "string",
+                              "enum": [
+                                "normal",
+                                "grund",
+                                "wahl",
+                                "bedarf_mit_gb",
+                                "bedarf_ohne_gb",
+                                "hinweis",
+                                "ausfuehrung",
+                                "bereich",
+                                "los"
+                              ]
+                            },
+                            "id": {
+                              "nullable": true,
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 80
+                            },
+                            "ebene": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9
+                            },
+                            "zulage": {
+                              "type": "boolean"
+                            },
+                            "pauschal": {
+                              "type": "boolean"
+                            },
+                            "stundenlohn": {
+                              "type": "boolean"
+                            },
+                            "altGruppe": {
+                              "type": "string",
+                              "maxLength": 10
+                            },
+                            "altNr": {
+                              "type": "string",
+                              "maxLength": 10
+                            },
+                            "einheit": {
+                              "type": "string",
+                              "maxLength": 20
+                            },
+                            "menge": {
+                              "type": "number",
+                              "minimum": -1000000000,
+                              "maximum": 1000000000
+                            },
+                            "gekuerzt": {
+                              "type": "boolean"
+                            },
+                            "inSumme": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "art"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "typ",
+                        "menge",
+                        "einheit",
+                        "einzelpreisCent"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "typ",
+                  "positionen"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "postDocumentsKalkulationsstreifen"
+      }
+    },
+    "/api/v1/documents/kalkulationsstreifen/einstellung": {
+      "get": {
+        "tags": [
+          "Belege"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "getDocumentsKalkulationsstreifenEinstellung"
+      },
+      "put": {
+        "tags": [
+          "Belege"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "gruenAbProzent": {
+                    "default": 25,
+                    "type": "number",
+                    "minimum": -100,
+                    "maximum": 100
+                  },
+                  "gelbAbProzent": {
+                    "default": 15,
+                    "type": "number",
+                    "minimum": -100,
+                    "maximum": 100
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "putDocumentsKalkulationsstreifenEinstellung"
       }
     },
     "/api/v1/documents/kennzahlen": {
@@ -18234,6 +18948,33 @@
                             "art"
                           ],
                           "additionalProperties": false
+                        },
+                        "bild": {
+                          "nullable": true,
+                          "type": "object",
+                          "properties": {
+                            "quelle": {
+                              "type": "string",
+                              "enum": [
+                                "artikel",
+                                "upload",
+                                "modul"
+                              ]
+                            },
+                            "drucken": {
+                              "type": "boolean"
+                            },
+                            "anhangId": {
+                              "nullable": true,
+                              "type": "string",
+                              "format": "uuid",
+                              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                            }
+                          },
+                          "required": [
+                            "quelle",
+                            "drucken"
+                          ]
                         }
                       },
                       "required": [
@@ -18403,6 +19144,113 @@
           }
         },
         "operationId": "deleteDocumentsById"
+      }
+    },
+    "/api/v1/documents/{id}/bilder": {
+      "post": {
+        "tags": [
+          "Belege"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "postDocumentsByIdBilder"
+      }
+    },
+    "/api/v1/documents/{id}/bilder/{bid}": {
+      "get": {
+        "tags": [
+          "Belege"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "default": "vorschau",
+              "type": "string",
+              "enum": [
+                "vorschau",
+                "liste",
+                "detail",
+                "druck",
+                "voll"
+              ]
+            },
+            "in": "query",
+            "name": "groesse",
+            "required": false
+          },
+          {
+            "schema": {
+              "default": "raster",
+              "type": "string",
+              "enum": [
+                "webp",
+                "raster"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 80
+            },
+            "in": "query",
+            "name": "v",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 10
+            },
+            "in": "query",
+            "name": "m",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "path",
+            "name": "bid",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "getDocumentsByIdBilderByBid"
       }
     },
     "/api/v1/documents/{id}/convert": {
@@ -18632,6 +19480,31 @@
           }
         },
         "operationId": "postDocumentsByIdFinalize"
+      }
+    },
+    "/api/v1/documents/{id}/kalkulationsstreifen": {
+      "get": {
+        "tags": [
+          "Belege"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "getDocumentsByIdKalkulationsstreifen"
       }
     },
     "/api/v1/documents/{id}/kopie": {
@@ -19094,6 +19967,88 @@
           }
         },
         "operationId": "patchDocumentsByIdPortal"
+      }
+    },
+    "/api/v1/documents/{id}/positionen/{pid}/bild": {
+      "get": {
+        "tags": [
+          "Belege"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "default": "vorschau",
+              "type": "string",
+              "enum": [
+                "vorschau",
+                "liste",
+                "detail",
+                "druck",
+                "voll"
+              ]
+            },
+            "in": "query",
+            "name": "groesse",
+            "required": false
+          },
+          {
+            "schema": {
+              "default": "raster",
+              "type": "string",
+              "enum": [
+                "webp",
+                "raster"
+              ]
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 80
+            },
+            "in": "query",
+            "name": "v",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 10
+            },
+            "in": "query",
+            "name": "m",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "path",
+            "name": "pid",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "getDocumentsByIdPositionenByPidBild"
       }
     },
     "/api/v1/documents/{id}/prognose": {
@@ -19863,6 +20818,7 @@
         "tags": [
           "Standort-Gateways"
         ],
+        "description": "Druckoptionen für einen Druckzweck. Bedingte Pflichtangabe: `zweck` oder `quelle` (JSON mit dem Zweck), sonst 400 VALIDIERUNG.",
         "parameters": [
           {
             "schema": {
@@ -22077,6 +23033,7 @@
         "tags": [
           "Einsatzplanung"
         ],
+        "description": "Einsätze, die den Zeitraum `von`–`bis` überschneiden (beide Pflicht, Zeitpunkte mit Zeitzone).",
         "parameters": [
           {
             "schema": {
@@ -22086,7 +23043,8 @@
             },
             "in": "query",
             "name": "von",
-            "required": true
+            "required": true,
+            "description": "Beginn des Zeitraums, Zeitpunkt mit Zeitzone (ISO 8601, z. B. 2026-11-09T00:00:00+01:00)"
           },
           {
             "schema": {
@@ -22096,7 +23054,8 @@
             },
             "in": "query",
             "name": "bis",
-            "required": true
+            "required": true,
+            "description": "Ende des Zeitraums (ausschließlich), Zeitpunkt mit Zeitzone (ISO 8601)"
           },
           {
             "schema": {
@@ -22289,6 +23248,12 @@
                       "format": "uuid",
                       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                     }
+                  },
+                  "ansprechpartnerId": {
+                    "nullable": true,
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                   }
                 },
                 "required": [
@@ -22960,6 +23925,7 @@
         "tags": [
           "Einsatzplanung"
         ],
+        "description": "Einsätze der angemeldeten Person. Bedingte Pflichtangabe: `ansicht` (aktuell, vergangen) oder der Zeitraum `von` und `bis`, sonst 400 UNGUELTIG.",
         "parameters": [
           {
             "schema": {
@@ -23362,6 +24328,12 @@
                       "format": "uuid",
                       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                     }
+                  },
+                  "ansprechpartnerId": {
+                    "nullable": true,
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                   }
                 },
                 "required": [
@@ -23629,6 +24601,31 @@
           }
         },
         "operationId": "postEinsaetzeByIdAufmass"
+      }
+    },
+    "/api/v1/einsaetze/{id}/erinnerungen": {
+      "get": {
+        "tags": [
+          "Einsatzplanung"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "getEinsaetzeByIdErinnerungen"
       }
     },
     "/api/v1/einsaetze/{id}/kalender/{userId}": {
@@ -25195,6 +26192,33 @@
                                 "art"
                               ],
                               "additionalProperties": false
+                            },
+                            "bild": {
+                              "nullable": true,
+                              "type": "object",
+                              "properties": {
+                                "quelle": {
+                                  "type": "string",
+                                  "enum": [
+                                    "artikel",
+                                    "upload",
+                                    "modul"
+                                  ]
+                                },
+                                "drucken": {
+                                  "type": "boolean"
+                                },
+                                "anhangId": {
+                                  "nullable": true,
+                                  "type": "string",
+                                  "format": "uuid",
+                                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                }
+                              },
+                              "required": [
+                                "quelle",
+                                "drucken"
+                              ]
                             }
                           },
                           "required": [
@@ -25467,6 +26491,33 @@
                             "art"
                           ],
                           "additionalProperties": false
+                        },
+                        "bild": {
+                          "nullable": true,
+                          "type": "object",
+                          "properties": {
+                            "quelle": {
+                              "type": "string",
+                              "enum": [
+                                "artikel",
+                                "upload",
+                                "modul"
+                              ]
+                            },
+                            "drucken": {
+                              "type": "boolean"
+                            },
+                            "anhangId": {
+                              "nullable": true,
+                              "type": "string",
+                              "format": "uuid",
+                              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                            }
+                          },
+                          "required": [
+                            "quelle",
+                            "drucken"
+                          ]
                         }
                       },
                       "required": [
@@ -36360,6 +37411,19 @@
         "operationId": "getPersonalAuslastung"
       }
     },
+    "/api/v1/personal/dienstkonto-akten": {
+      "get": {
+        "tags": [
+          "Personal"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "getPersonalDienstkontoAkten"
+      }
+    },
     "/api/v1/personal/dokumente/{id}": {
       "patch": {
         "tags": [
@@ -38762,6 +39826,7 @@
         "tags": [
           "Skills"
         ],
+        "description": "Personen, die alle Bedingungen erfüllen. Jede Bedingung `skill` hat die Form `<skillId>:<mindeststufe>`; eine ungültige Bedingung ergibt 400 UNGUELTIG.",
         "parameters": [
           {
             "schema": {
@@ -38779,7 +39844,8 @@
             },
             "in": "query",
             "name": "skill",
-            "required": true
+            "required": true,
+            "description": "Bedingung `<skillId>:<mindeststufe>` (Kennung aus GET /personal/skills, Stufe 1–10; ohne Stufe 1), mehrfach, höchstens 5"
           },
           {
             "schema": {
@@ -39926,6 +40992,9 @@
                             "type": "integer",
                             "minimum": 10000,
                             "maximum": 699999999
+                          },
+                          "terminerinnerungAus": {
+                            "type": "boolean"
                           }
                         },
                         "required": [
@@ -42822,6 +43891,69 @@
                             "p"
                           ]
                         }
+                      },
+                      "bildschirmfoto": {
+                        "type": "object",
+                        "properties": {
+                          "daten": {
+                            "type": "string",
+                            "maxLength": 2000032,
+                            "pattern": "^data:image\\/(png|jpeg);base64,[A-Za-z0-9+/]+={0,2}$"
+                          },
+                          "breite": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 10000
+                          },
+                          "hoehe": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 10000
+                          },
+                          "seite": {
+                            "type": "string",
+                            "maxLength": 300
+                          },
+                          "aufgenommenAm": {
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "version": {
+                            "type": "string",
+                            "maxLength": 40
+                          },
+                          "module": {
+                            "default": [],
+                            "maxItems": 40,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "schluessel": {
+                                  "type": "string",
+                                  "maxLength": 60
+                                },
+                                "version": {
+                                  "type": "string",
+                                  "maxLength": 40
+                                }
+                              },
+                              "required": [
+                                "schluessel",
+                                "version"
+                              ]
+                            }
+                          }
+                        },
+                        "required": [
+                          "daten",
+                          "breite",
+                          "hoehe",
+                          "seite",
+                          "aufgenommenAm",
+                          "version"
+                        ]
                       }
                     },
                     "required": [
@@ -42847,6 +43979,48 @@
         "operationId": "postScratchpad"
       }
     },
+    "/api/v1/scratchpad/einstellungen": {
+      "get": {
+        "tags": [
+          "Datenschutz"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "getScratchpadEinstellungen"
+      },
+      "put": {
+        "tags": [
+          "Datenschutz"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "rueckgaengigTage": {
+                    "default": 7,
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 90
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "putScratchpadEinstellungen"
+      }
+    },
     "/api/v1/scratchpad/ziele": {
       "get": {
         "tags": [
@@ -42858,6 +44032,31 @@
           }
         },
         "operationId": "getScratchpadZiele"
+      }
+    },
+    "/api/v1/scratchpad/ziele/stories": {
+      "get": {
+        "tags": [
+          "Scratchpad"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "default": "",
+              "type": "string",
+              "maxLength": 100
+            },
+            "in": "query",
+            "name": "q",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "getScratchpadZieleStories"
       }
     },
     "/api/v1/scratchpad/ziele/suche": {
@@ -42878,7 +44077,8 @@
                 "reklamation",
                 "bestellung",
                 "betriebsmittel",
-                "arbeitsauftrag"
+                "arbeitsauftrag",
+                "story"
               ]
             },
             "in": "query",
@@ -43029,6 +44229,69 @@
                             "p"
                           ]
                         }
+                      },
+                      "bildschirmfoto": {
+                        "type": "object",
+                        "properties": {
+                          "daten": {
+                            "type": "string",
+                            "maxLength": 2000032,
+                            "pattern": "^data:image\\/(png|jpeg);base64,[A-Za-z0-9+/]+={0,2}$"
+                          },
+                          "breite": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 10000
+                          },
+                          "hoehe": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 10000
+                          },
+                          "seite": {
+                            "type": "string",
+                            "maxLength": 300
+                          },
+                          "aufgenommenAm": {
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "version": {
+                            "type": "string",
+                            "maxLength": 40
+                          },
+                          "module": {
+                            "default": [],
+                            "maxItems": 40,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "schluessel": {
+                                  "type": "string",
+                                  "maxLength": 60
+                                },
+                                "version": {
+                                  "type": "string",
+                                  "maxLength": 40
+                                }
+                              },
+                              "required": [
+                                "schluessel",
+                                "version"
+                              ]
+                            }
+                          }
+                        },
+                        "required": [
+                          "daten",
+                          "breite",
+                          "hoehe",
+                          "seite",
+                          "aufgenommenAm",
+                          "version"
+                        ]
                       }
                     },
                     "required": [
@@ -43089,6 +44352,61 @@
         "operationId": "deleteScratchpadById"
       }
     },
+    "/api/v1/scratchpad/{id}/an-story": {
+      "post": {
+        "tags": [
+          "Scratchpad"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "storyId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "version": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
+                  },
+                  "bild": {
+                    "nullable": true,
+                    "type": "string",
+                    "maxLength": 2796267
+                  }
+                },
+                "required": [
+                  "storyId"
+                ]
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "postScratchpadByIdAnStory"
+      }
+    },
     "/api/v1/scratchpad/{id}/rueckgaengig": {
       "post": {
         "tags": [
@@ -43137,7 +44455,8 @@
                       "reklamation",
                       "bestellung",
                       "betriebsmittel",
-                      "arbeitsauftrag"
+                      "arbeitsauftrag",
+                      "story"
                     ]
                   },
                   "zielId": {
@@ -43243,6 +44562,106 @@
           }
         },
         "operationId": "putSettingsAgb"
+      }
+    },
+    "/api/v1/settings/belegbilder": {
+      "get": {
+        "tags": [
+          "Einstellungen"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "getSettingsBelegbilder"
+      },
+      "put": {
+        "tags": [
+          "Einstellungen"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "drucken": {
+                    "default": {
+                      "angebot": true,
+                      "auftrag": true,
+                      "rechnung": false,
+                      "lieferschein": true,
+                      "arbeitsauftrag": true
+                    },
+                    "type": "object",
+                    "properties": {
+                      "angebot": {
+                        "default": true,
+                        "type": "boolean"
+                      },
+                      "auftrag": {
+                        "default": true,
+                        "type": "boolean"
+                      },
+                      "rechnung": {
+                        "default": false,
+                        "type": "boolean"
+                      },
+                      "lieferschein": {
+                        "default": true,
+                        "type": "boolean"
+                      },
+                      "arbeitsauftrag": {
+                        "default": true,
+                        "type": "boolean"
+                      }
+                    }
+                  },
+                  "bemassung": {
+                    "default": {
+                      "angebot": false,
+                      "auftrag": false,
+                      "rechnung": false,
+                      "lieferschein": false,
+                      "arbeitsauftrag": true
+                    },
+                    "type": "object",
+                    "properties": {
+                      "angebot": {
+                        "default": false,
+                        "type": "boolean"
+                      },
+                      "auftrag": {
+                        "default": false,
+                        "type": "boolean"
+                      },
+                      "rechnung": {
+                        "default": false,
+                        "type": "boolean"
+                      },
+                      "lieferschein": {
+                        "default": false,
+                        "type": "boolean"
+                      },
+                      "arbeitsauftrag": {
+                        "default": true,
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "putSettingsBelegbilder"
       }
     },
     "/api/v1/settings/company": {
@@ -49307,6 +50726,103 @@
         "operationId": "deleteTeamsById"
       }
     },
+    "/api/v1/terminerinnerung": {
+      "get": {
+        "tags": [
+          "Einsatzplanung"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "getTerminerinnerung"
+      },
+      "put": {
+        "tags": [
+          "Einsatzplanung"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "aktiv": {
+                    "default": false,
+                    "type": "boolean"
+                  },
+                  "vorlaufStunden": {
+                    "default": 24,
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 336
+                  },
+                  "ruhezeitVon": {
+                    "default": "20:00",
+                    "nullable": true,
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  },
+                  "ruhezeitBis": {
+                    "default": "08:00",
+                    "nullable": true,
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  },
+                  "arten": {
+                    "default": [
+                      "montage",
+                      "aufmass",
+                      "service",
+                      "lieferung",
+                      "beratung"
+                    ],
+                    "maxItems": 7,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "montage",
+                        "aufmass",
+                        "service",
+                        "lieferung",
+                        "fertigung",
+                        "sonstiges",
+                        "beratung"
+                      ]
+                    }
+                  },
+                  "icsAnhang": {
+                    "default": true,
+                    "type": "boolean"
+                  },
+                  "betreff": {
+                    "default": "Terminerinnerung: {art} am {datum} um {uhrzeit} Uhr",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "text": {
+                    "default": "Guten Tag{ ansprechpartner},\n\nwir möchten Sie an unseren vereinbarten Termin erinnern:\n\n{art}: {titel}\nBeginn: {datum}, {uhrzeit} Uhr\nVoraussichtliches Ende: {bis}{\nOrt: ort}\n\nPasst der Termin nicht mehr, melden Sie sich bitte bei uns{ unter telefon}{ oder per E-Mail an email}.\n\nMit freundlichen Grüßen\n{firma}",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 5000
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        },
+        "operationId": "putTerminerinnerung"
+      }
+    },
     "/api/v1/users": {
       "get": {
         "tags": [
@@ -49350,6 +50866,7 @@
         "tags": [
           "Kommunikation"
         ],
+        "description": "Verlauf eines Bezugs. Bedingte Pflichtangabe: ein Bezug `kundeId`, `lieferantId`, `belegId` oder `reklamationId`, sonst 400 UNGUELTIG.",
         "parameters": [
           {
             "schema": {
@@ -50946,6 +52463,33 @@
                             "art"
                           ],
                           "additionalProperties": false
+                        },
+                        "bild": {
+                          "nullable": true,
+                          "type": "object",
+                          "properties": {
+                            "quelle": {
+                              "type": "string",
+                              "enum": [
+                                "artikel",
+                                "upload",
+                                "modul"
+                              ]
+                            },
+                            "drucken": {
+                              "type": "boolean"
+                            },
+                            "anhangId": {
+                              "nullable": true,
+                              "type": "string",
+                              "format": "uuid",
+                              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                            }
+                          },
+                          "required": [
+                            "quelle",
+                            "drucken"
+                          ]
                         }
                       },
                       "required": [
@@ -51262,6 +52806,33 @@
                             "art"
                           ],
                           "additionalProperties": false
+                        },
+                        "bild": {
+                          "nullable": true,
+                          "type": "object",
+                          "properties": {
+                            "quelle": {
+                              "type": "string",
+                              "enum": [
+                                "artikel",
+                                "upload",
+                                "modul"
+                              ]
+                            },
+                            "drucken": {
+                              "type": "boolean"
+                            },
+                            "anhangId": {
+                              "nullable": true,
+                              "type": "string",
+                              "format": "uuid",
+                              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                            }
+                          },
+                          "required": [
+                            "quelle",
+                            "drucken"
+                          ]
                         }
                       },
                       "required": [

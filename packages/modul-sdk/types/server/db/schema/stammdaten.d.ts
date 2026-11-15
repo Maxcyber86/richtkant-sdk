@@ -784,6 +784,23 @@ export declare const customers: import("drizzle-orm/pg-core").PgTableWithColumns
             identity: undefined;
             generated: undefined;
         }, {}, {}>;
+        terminerinnerungAus: import("drizzle-orm/pg-core").PgColumn<{
+            name: "terminerinnerung_aus";
+            tableName: "customers";
+            dataType: "boolean";
+            columnType: "PgBoolean";
+            data: boolean;
+            driverParam: boolean;
+            notNull: true;
+            hasDefault: true;
+            isPrimaryKey: false;
+            isAutoincrement: false;
+            hasRuntimeDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+            identity: undefined;
+            generated: undefined;
+        }, {}, {}>;
         isTest: import("drizzle-orm/pg-core").PgColumn<{
             name: "is_test";
             tableName: "customers";

@@ -12,6 +12,8 @@ export declare const HILFE: {
     readonly "administration.standort_gateways.geraete.scanner": HilfeThema;
     readonly "administration.standort_gateways.treiber": HilfeThema;
     readonly "allgemein.konto.drucker": HilfeThema;
+    readonly "vertrieb.angebote.positionen.bilder": HilfeThema;
+    readonly "administration.belegtexte.belegbilder": HilfeThema;
     readonly "administration.belegtexte.agb": HilfeThema;
     readonly "vertrieb.angebote.zahlungsplan": HilfeThema;
     readonly "verbesserungen.stories.anhaenge": HilfeThema;
@@ -51,6 +53,7 @@ export declare const HILFE: {
     readonly "allgemein.uebersicht.mein_tag": HilfeThema;
     readonly "allgemein.uebersicht.schnellaktionen": HilfeThema;
     readonly "administration.belegtexte.mailvorlagen": HilfeThema;
+    readonly "administration.belegtexte.terminerinnerung": HilfeThema;
     readonly "material.inventur_einstellungen": HilfeThema;
     readonly "material.etikettenvorlagen": HilfeThema;
     readonly "einkauf.katalogabruf": HilfeThema;
@@ -117,6 +120,7 @@ export declare const HILFE: {
     readonly "allgemein.scratchpad": HilfeThema;
     readonly "allgemein.scratchpad.zeichnen": HilfeThema;
     readonly "allgemein.scratchpad.zuweisen": HilfeThema;
+    readonly "allgemein.scratchpad.bildschirmfoto": HilfeThema;
     readonly "allgemein.scratchpad.offline": HilfeThema;
     readonly "betriebsmittel.uebersicht.einplanung": HilfeThema;
     readonly "betriebsmittel.ausleihe": HilfeThema;
@@ -183,6 +187,7 @@ export declare const HILFE: {
     readonly "administration.ki_import.wiederholung": HilfeThema;
     readonly "administration.ki_import.rueckgaengig": HilfeThema;
     readonly "assistent.nutzen": HilfeThema;
+    readonly "administration.ki_assistent.kennzeichnung": HilfeThema;
     readonly "administration.ki_assistent": HilfeThema;
     readonly "administration.mcp": HilfeThema;
     readonly "administration.mcp.verbinden": HilfeThema;
@@ -210,7 +215,6 @@ export declare const HILFE: {
     readonly "administration.betrieb.laeufe": HilfeThema;
     readonly "administration.betrieb.hintergrund": HilfeThema;
     readonly "administration.betrieb.zugaenge": HilfeThema;
-    readonly "administration.betrieb.virenpruefung": HilfeThema;
     readonly "administration.virenpruefung": HilfeThema;
     readonly "administration.betrieb.einstellungen": HilfeThema;
     readonly "material.inventur": HilfeThema;
@@ -456,7 +460,6 @@ export declare const HILFE: {
     readonly "administration.buchhaltung": HilfeThema;
     readonly "administration.buchhaltung.verbindungen": HilfeThema;
     readonly "administration.buchhaltung.mapping": HilfeThema;
-    readonly "administration.buchhaltung.sepa": HilfeThema;
     readonly "finanzen.zahlungsverkehr": HilfeThema;
     readonly "vertrieb.kunden.zahlung": HilfeThema;
     readonly "vertrieb.kunden.mandate": HilfeThema;
@@ -482,6 +485,7 @@ export declare const HILFE: {
     readonly "projekte.einsatzplanung.wochenplan": HilfeThema;
     readonly "projekte.einsatzplanung.einsatz": HilfeThema;
     readonly "projekte.kapazitaet": HilfeThema;
+    readonly "projekte.einsatzplanung.terminerinnerung": HilfeThema;
     readonly "projekte.einsatzplanung.helfer": HilfeThema;
     readonly "projekte.einsatzplanung.outlook": HilfeThema;
     readonly "projekte.einsatzplanung.kalenderantworten": HilfeThema;
@@ -541,6 +545,7 @@ export declare const HILFE: {
     readonly "vertrieb.angebote.kopf": HilfeThema;
     readonly "vertrieb.angebote.positionen": HilfeThema;
     readonly "vertrieb.angebote.summe": HilfeThema;
+    readonly "vertrieb.angebote.kalkulationsstreifen": HilfeThema;
     readonly "vertrieb.angebote.folgeaktionen": HilfeThema;
     readonly "vertrieb.angebote.unterschrift": HilfeThema;
     readonly "vertrieb.angebote.zahlungen": HilfeThema;

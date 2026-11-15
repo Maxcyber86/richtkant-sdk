@@ -10,3 +10,4 @@ export { formatDateTime, uploadFiles } from '../lib/format';
 export { formatDate } from '../lib/branding';
 export type { Article, Customer, Paged, Supplier } from '../lib/types';
 export { OderKennwort, PasskeyBestaetigenKnopf, passkeyBestaetigungHolen, useBestaetigungsArten } from '../components/sicherheit/passkey-bestaetigung';
+export { AufStandardKnopf, EinstellungStandard, FeldStandard } from '../components/einstellungen/standard';

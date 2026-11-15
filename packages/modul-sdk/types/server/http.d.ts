@@ -1,6 +1,6 @@
 import type { FastifyRequest, preHandlerHookHandler } from 'fastify';
-import type { Permission } from '../core/permissions.js';
-import type { UnumkehrbarArt } from '../core/assistent.js';
+import { type Permission } from '../core/permissions.js';
+import { type UnumkehrbarArt } from '../core/assistent.js';
 import type { SessionUser } from './auth/session.js';
 export declare class HttpError extends Error {
     readonly statusCode: number;

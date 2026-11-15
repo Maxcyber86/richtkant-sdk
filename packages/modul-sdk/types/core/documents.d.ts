@@ -1,1 +1,1 @@
-export declare const POSITION_TYPES: readonly ["artikel", "glas", "alu", "lohn", "freitext", "titel"];
+export declare const POSITION_TYPES: readonly ["artikel", "glas", "fenster", "alu", "lohn", "freitext", "titel"];

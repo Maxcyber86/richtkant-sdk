@@ -68,6 +68,7 @@ export interface Customer {
     leitwegId: string | null;
     bauleistender13b: boolean;
         lohnanteilAusweisen?: boolean;
+        terminerinnerungAus?: boolean;
     /** Eigenes Zahlungsziel in Tagen; null = Systemstandard */
     zahlungszielTage: number | null;
         branche?: string | null;

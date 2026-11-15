@@ -1,9 +1,10 @@
 import type { AdminGruppe, Nummernkreis } from '../navigation.js';
 import type { FunktionsSchalter } from '../modulverwaltung.js';
 import type { DemoModulDef } from '../demodaten.js';
+import type { InterneWerteKennzeichnung } from '../kundenansicht.js';
 import type { ArtikelGrundart, BezugswegVorlageBeitrag, KatalogName, QualifikationsvorlageBeitrag } from './kataloge.js';
 /** Version des Modulvertrags (Semver), die dieser Core erfüllt; Module erklären in `vertrag` den benötigten Bereich */
-export declare const MODUL_VERTRAG_VERSION = "2.4.0";
+export declare const MODUL_VERTRAG_VERSION = "2.5.0";
 /**
  * Hauptversionen des Vertrags, gegen die gebaute Module dieser Core annimmt. Vertrag 2 ist eine Obermenge von 1 (alle
  * Erweiterungspunkte von 1 bestehen unverändert); Module mit Vertrag 1 laufen weiter, gelten aber als veraltet.
@@ -207,6 +208,7 @@ export interface ModulManifest {
     bezugswegVorlagen?: BezugswegVorlageBeitrag[];
     /** Grundarten des Artikelstamms, die das Modul beisteuert (Verhalten im Artikelformular, Erweiterungsfeld) */
     artikelGrundarten?: Omit<ArtikelGrundart, 'modul'>[];
+        interneWerte?: InterneWerteKennzeichnung;
 }
 /**
  * Lebenszyklus eines Moduls je Instanz: `verfuegbar` (im Image, nie installiert) → `installiert_aktiv` bzw.

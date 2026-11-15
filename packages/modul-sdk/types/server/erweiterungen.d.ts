@@ -1,3 +1,5 @@
+import type { ModulFeldregisterBeitrag } from '../core/feldregister/typen.js';
+import type { BelegZeichnung } from '../core/belegbilder.js';
 import type { FreigabeRegelZustand } from '../core/vieraugen.js';
 import type { FuellungsRechner } from '../core/modulsystem/fuellung.js';
 import type { KiGlossarEintrag } from '../core/ki-glossar.js';
@@ -23,6 +25,9 @@ export interface PositionstypErweiterung {
     demoQuellen(db: DbOrTx, ids: readonly string[]): Promise<string[]>;
     /** Betreff eines neuen Angebots aus Quellen dieses Typs (Standard des Core: 'Angebot') */
     angebotsBetreff?: string;
+        kostenanteileJeStueck?(db: DbOrTx, quelleIds: readonly string[]): Promise<Map<string, {
+        lohnCent: number;
+    }>>;
 }
 export interface BedarfsQuelle {
         quellTyp: string;
@@ -417,6 +422,12 @@ export interface AssistentWerkzeugBeitrag {
     /** Modulschlüssel (für den Ausschluss durch die Verwaltung) */
     modul: string;
         name: string;
+    /**
+     * Vertrag 2.5.0 (0.17.0, optional): frühere Namen desselben Werkzeugs. Gespeicherte Aktionen des KI-Assistenten (Bestätigung
+     * aus einem Chat vor der Umbenennung) mit einem früheren Namen wirken wie Aufrufe mit `name` (veralteter Alias); im Katalog
+     * des Assistenten steht nur `name`.
+     */
+    frueher?: string[];
     titel: string;
     beschreibung: string;
     /** Mindestens eines dieser Rechte (zusätzlich zu ki.assistent bzw. ki.nutzen) */
@@ -471,6 +482,14 @@ export interface AufmassZiel {
 export interface FreigabeRegelQuelle {
     regeln(db: DbOrTx): Promise<FreigabeRegelZustand[]>;
 }
+export interface BelegbildQuelle {
+        positionstyp: string;
+    /** Zeichnung der Quelle; `stand` benennt die Fassung (z. B. „Revision 3“); null = keine Grafik (Quelle fehlt bzw. ohne Kontur) */
+    belegbild(db: DbOrTx, quelleId: string): Promise<{
+        zeichnung: BelegZeichnung;
+        stand: string;
+    } | null>;
+}
 /** Alle Beiträge eines Moduls */
 export interface ErweiterungsSatz {
     positionstypen?: PositionstypErweiterung[];
@@ -498,6 +517,13 @@ export interface ErweiterungsSatz {
         aufmassZiele?: AufmassZiel[];
     /** 0.16.14 (Vertrag 2.4.0, optional): Freigabe- und Vier-Augen-Regeln für die Systemübersicht */
     freigabeRegeln?: FreigabeRegelQuelle[];
+        belegbilder?: BelegbildQuelle[];
+    /**
+     * 0.17.0 (Vertrag 2.5.0, optional, Paket H): Einstellungen des Moduls im Feldregister (Feldsuche der Administration, Sprung an das
+     * Feld, „Abweichend vom Standard“, Fristenübersicht, lesbare Bezeichnungen im Änderungsprotokoll). Reine Daten mit Formatversion;
+     * geprüft mit `modulFeldregisterPruefen` (`@gm/core/feldregister`), ungültige Einstellungen entfallen mit Hinweis im Protokoll.
+     */
+    feldregister?: ModulFeldregisterBeitrag[];
 }
 export type ErweiterungsPunkt = keyof ErweiterungsSatz;
 /** Hintergrundaufgabe eines Moduls (Spiegel von ModulHintergrundaufgabe, ohne Importzyklus auf sdk/modul.ts) */

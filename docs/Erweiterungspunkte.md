@@ -1,6 +1,6 @@
 # Referenz der Erweiterungspunkte
 
-Richtkant ERP 0.16.14 · Modulvertrag 2.4.0 · Stand 2026-11-13
+Richtkant ERP 0.17.0 · Modulvertrag 2.5.0 · Stand 2026-11-14
 Verantwortlich: Christian Heitzer, www.heitzer.info
 
 Erzeugt aus den Typdeklarationen in `packages/modul-sdk` (maßgeblich sind die Typen; Regeln und Aufrufstellen im Core:
@@ -48,6 +48,8 @@ Alle Beiträge eines Moduls
 | `kiGlossar` | nein | `KiGlossarBeitrag[]` | 0.13.2 (Vertrag 2.1.0): Fachbegriffe für das Glossar des KI-Assistenten |
 | `aufmassZiele` | nein | `AufmassZiel[]` | – |
 | `freigabeRegeln` | nein | `FreigabeRegelQuelle[]` | 0.16.14 (Vertrag 2.4.0, optional): Freigabe- und Vier-Augen-Regeln für die Systemübersicht |
+| `belegbilder` | nein | `BelegbildQuelle[]` | – |
+| `feldregister` | nein | `ModulFeldregisterBeitrag[]` | 0.17.0 (Vertrag 2.5.0, optional, Paket H): Einstellungen des Moduls im Feldregister (Feldsuche der Administration, Sprung an das Feld, „Abweichend vom Standard“, Fristenübersicht, lesbare Bezeichnungen im Änderungsprotokoll). Reine Daten mit Formatversion; geprüft mit `modulFeldregisterPruefen` (`@gm/core/feldregister`), ungültige Einstellungen entfallen mit Hinweis im Protokoll. |
 
 ## Web: WebModul (`@gm/web/sdk`)
 
@@ -110,6 +112,7 @@ Manifest eines Moduls (versionierter Vertrag)
 | `qualifikationsvorlagen` | nein | `QualifikationsvorlageBeitrag[]` | Vorlagen des Qualifikationskatalogs (Personal), die das Modul beisteuert |
 | `bezugswegVorlagen` | nein | `BezugswegVorlageBeitrag[]` | Vorlagen der Bezugswege für Lieferantenkataloge (Lieferanten der Branche des Moduls) |
 | `artikelGrundarten` | nein | `Omit<ArtikelGrundart, 'modul'>[]` | Grundarten des Artikelstamms, die das Modul beisteuert (Verhalten im Artikelformular, Erweiterungsfeld) |
+| `interneWerte` | nein | `InterneWerteKennzeichnung` | – |
 
 ## Manifest: Verzeichnis (`ModulVerzeichnis`)
 

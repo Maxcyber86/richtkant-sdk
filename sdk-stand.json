@@ -1,8 +1,8 @@
 {
   "produkt": "Richtkant ERP",
-  "core": "0.16.14",
-  "vertrag": "2.4.0",
+  "core": "0.17.0",
+  "vertrag": "2.5.0",
   "api": "/api/v1",
-  "datum": "2026-11-13",
-  "quelle": "fd28076"
+  "datum": "2026-11-14",
+  "quelle": "074fc3f"
 }

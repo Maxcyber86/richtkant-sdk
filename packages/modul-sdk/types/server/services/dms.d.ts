@@ -48,6 +48,7 @@ export declare function createDmsDocument(db: DbOrTx, store: FileStore, input: N
     nummer: string;
     projektId: string | null;
     belegId: string | null;
+    quelle: string;
     reklamationId: string | null;
     betriebsmittelId: string | null;
     dokumentDatum: string;
@@ -56,7 +57,6 @@ export declare function createDmsDocument(db: DbOrTx, store: FileStore, input: N
     korrespondent: string | null;
     tags: string[];
     mitarbeiterId: string | null;
-    quelle: string;
     createdAt: Date;
     updatedAt: Date;
     isTest: boolean;

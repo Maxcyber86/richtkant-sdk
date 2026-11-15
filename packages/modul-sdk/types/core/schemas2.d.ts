@@ -45,5 +45,14 @@ export declare const positionInputSchema: z.ZodObject<{
         gekuerzt: z.ZodOptional<z.ZodBoolean>;
         inSumme: z.ZodOptional<z.ZodBoolean>;
     }, z.core.$strict>>>;
+    bild: z.ZodOptional<z.ZodNullable<z.ZodObject<{
+        quelle: z.ZodEnum<{
+            artikel: "artikel";
+            modul: "modul";
+            upload: "upload";
+        }>;
+        drucken: z.ZodBoolean;
+        anhangId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    }, z.core.$strip>>>;
 }, z.core.$strip>;
 export type PositionInput = z.infer<typeof positionInputSchema>;

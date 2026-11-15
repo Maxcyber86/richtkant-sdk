@@ -1,10 +1,10 @@
 # Öffentliche API (Instanz-API /api/v1)
 
-Richtkant ERP 0.16.14 · Modulvertrag 2.4.0 · Stand 2026-11-13
+Richtkant ERP 0.17.0 · Modulvertrag 2.5.0 · Stand 2026-11-14
 Verantwortlich: Christian Heitzer, www.heitzer.info
 
 Die maschinenlesbare Beschreibung aller über einen API-Zugang erreichbaren Endpunkte liegt in
-[openapi/openapi.json](../openapi/openapi.json) (OpenAPI 3, erzeugt aus Richtkant Core 0.16.14 ohne Module; Endpunkte, die über
+[openapi/openapi.json](../openapi/openapi.json) (OpenAPI 3, erzeugt aus Richtkant Core 0.17.0 ohne Module; Endpunkte, die über
 die API immer gesperrt sind, sind dort nicht enthalten). Jede Instanz liefert ihre eigene, vollständige Beschreibung unter
 `GET /api/v1/openapi.json`, einschließlich der Endpunkte ihrer installierten Module.
 
@@ -201,6 +201,7 @@ Listen mit Anzeigegrenze kürzen nie still. Gemeinsamer Listenvertrag:
   Rechte-Matrix (`GET /api/v1/roles/rechte-matrix.csv`) gehört zu Benutzer und Rollen und ist über die API gesperrt (Abschnitt 2).
 - **Protokoll:** Jede Änderung einer Einstellung, auch über die API, erscheint als `einstellungen.geaendert` mit geänderten Feldern
   und vorher/nachher (Geheimnisse maskiert); bisherige Einzelaktionen bleiben zusätzlich.
+
 
 ## 6. Protokoll und Datenschutz
 

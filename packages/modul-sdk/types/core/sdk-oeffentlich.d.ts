@@ -1,5 +1,6 @@
 export { DemoModulDef, istDemoName } from './demodaten.js';
 export { BedarfsPosition, BedarfsQuelle } from './einkauf.js';
+export { EinstellungsAngaben, FeldAngaben, FeldEinheit, FeldKennzeichen, InternerSchluessel, ModulFeldregisterBeitrag, RegisterFeld } from './feldregister/typen.js';
 export { formatCent, formatNumber, parseEuroToCent } from './format.js';
 export { KiGlossarEintrag } from './ki-glossar.js';
 export { ModulChangelogEintrag, modulChangelogPruefen } from './modulsystem/changelog.js';
